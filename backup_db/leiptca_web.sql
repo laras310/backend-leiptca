@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2022 at 09:07 AM
+-- Generation Time: Nov 03, 2022 at 05:41 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -32,17 +32,18 @@ CREATE TABLE `article` (
   `author_name` text NOT NULL,
   `article_title` text NOT NULL,
   `article_text` text NOT NULL,
-  `article_date` date NOT NULL
+  `article_date` date NOT NULL,
+  `article_pic` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `article`
 --
 
-INSERT INTO `article` (`article_id`, `author_name`, `article_title`, `article_text`, `article_date`) VALUES
-('ar1', 'Nurul Aulia Larasati', 'Apa Itu Sworn Translator?', 'A certified translation is one which fulfills the requirements in the country in question, enabling it to be used in formal procedures, with the translator accepting responsibility for its accuracy. These requirements vary widely from country to country. While some countries allow only state-appointed translators to produce such translations, others will accept those carried out by any competent bilingual individual. Between these two extremes are countries where a certified translation can be carried out by any professional translator with the correct credentials (which may include membership of specific translation associations or the holding of certain qualifications).\r\n\r\nEnglish speaking countries such as the United Kingdom, the USA, Australia and New Zealand fall on the more relaxed end of the spectrum, and simply require certified translations to include a statement made by the translator attesting to its accuracy, along with the date, the translator\'s credentials and contact details. This is the type of certification that is required by UK government bodies such as the Home Office and the UK Border Agency, as well as by universities and most foreign embassies.\r\n\r\nEuropean countries other than the UK tend to have much stricter laws regarding who can produce a certified translation, with most appointing official certified translators based on them having obtained the local state-regulated qualification.', '2022-10-28'),
-('ar2', 'Nurul Aulia Larasati', 'Pengertian CV (Persekutuan Komanditer): Jenis dan Tujuan', 'CV adalah salah satu bentuk badan usaha yang dibentuk oleh dua orang atau lebih yang kemudian mempercayakan modal yang dimiliki kepada dua orang atau lebih. Hal itu dilakukan ntuk menjalankan perusahaan tersebut sekaligus dipercaya untuk memimpin perusahaan. Tujuannya agar tercapainya cita-cita bersama dengan tingkat keterlibatan masing-masing anggotanya berbeda. Oleh karena itu, di dalam CV terdapat dua sekutu yang berbeda.\r\n\r\nSementara itu ada beberapa ahli yang berpendapat bahwa CV terdiri dari sekutu komanditer dan sekutu komplementer. Sekutu komanditer (sekutu pasif) memiliki tanggung jawab untuk memberikan modal CV kepada sekutu komplementer (sekutu aktif) yang bertanggung jawab untuk menjalankan kegiatan CV.\r\n\r\nCV terbagi menjadi beberapa jenis, yaitu:\r\n\r\n1. CV Bersaham\r\nCV jenis ini memiliki karakter yang khas karena CV ini mengeluarkan saham yang bisa diambil oleh sekutu aktif maupun pasif. Masing-masing dapat mengambil satu saham atau lebih. Namun demikian, saham tersebut tidak dapat diperjualbelikan karena tidak mudah untuk menarik kembali modal yang telah disetorkan. Tujuan adanya saham untuk menghindari adanya modal beku.\r\n\r\n2. CV Murni\r\nCV jenis ini merupakan persekutuan komanditer yang pertama kali ada dan paling sederhana. Di dalam CV ini hanya terdapat satu sekutu komplementer sedangkan pihak-pihak lainnya berperan sebagai sekutu komanditer.\r\n\r\n3. CV Campuran\r\nCV campuran biasanya berasal dari firma sebagai bentuk awal. Namun dalam operasionalnya, firma tersebut memerlukan tambahan suntikan modal. Pihak yang berkenan memberikan tambahan modal berperan sebagai sekutu komanditer, sehingga firma yang menerima modal dan menjalankan usaha disebut sebagai sekutu komplementer.\r\n\r\nCV dibentuk agar sebuah badan usaha dapat menjalankan aktivitas bisnisnya dengan resmi dan legal sesuai hukum. Karena CV pada umumnya didirikan dengan akta dan didaftarkan melalui notaris sehingga mempunyai payung hukum.\r\n\r\nDalam perjalanan bisnis, seringkali kerja sama dengan pihak lain, terutama perusahaan atau instansi besar dan resmi, mensyaratkan adanya badan usaha yang legal menurut hukum. Misalkan untuk mengikuti tender dari instansi pemerintah atau perusahaan swasta, perusahaan-perusahaan yang diperbolehkan mengikuti tender tersebut adalah perusahaan yang berbentuk CV atau PT.\r\n\r\nHal ini bukan tanpa sebab. Bekerja sama dengan perusahaan yang legal dan resmi sesuai hukum memberikan jaminan keamanan yang lebih tinggi dibanding bekerja sama dengan usaha yang belum terdaftar secara hukum. Terlebih di dalam kerja sama tersebut ada transaksi yang nilainya besar.', '2022-10-28'),
-('ar3', 'Edinia Rosa Filiana', 'Hukum Perdata Adalah Apa? Ini Pengertiannya Menurut Para Ahli', 'Secara umum hukum perdata adalah serangkaian peraturan hukum yang mengatur hubungan subjek hukum (orang dan badan hukum) yang satu dengan subjek hukum yang lain dengan menitikberatkan pada kepentingan pribadi dari subjek hukum tersebut.\r\n\r\nHukum perdana bertujuan untuk mengatur hubungan di antara penduduk atau warga negara sehari-hari, seperti kedewasaan seseorang, perkawinan, perceraian, kematian, waris, harta benda, kegiatan usaha dan tindakan bersifat perdata lainnya.\r\n\r\nDari buku Hukum Perdata Indonesia oleh P.N.H Simanjuntak (2015), berikut pengertian hukum perdata menurut para pakar sarjana hukum:\r\n\r\nProf. Subekti, S.H.: Hukum perdata dalam arti yang luas meliputi semua hukum \"privat materiel\", yaitu segala hukum pokok yang mengatur kepentingan-kepentingan perseorangan.\r\n\r\nProf. Soediman Kartohadiprodjo, S.H.: Hukum perdata (materil) adalah kesemuanya kaidah hukum yang menentukan dan mengatur hak-hak dan kewajiban-kewajiban perdata.\r\nProf. Dr. Sudikno Mertokusumo, S.H.: Hukum perdata adalah hukum antar-perorangan yang mengatur hak dan kewajiban perorangan yang satu terhadap yang lain di dalam hubungan keluarga dan di dalam pergaulan masyarakat.\r\n\r\nProf. Dr. R. Wirjono Prodjodikoro, S.H.: Hukum perdata adalah suatu rangkaian hukum antara orang-orang atau badan hukum yang satu sama lain tentang hak dan kewajiban.\r\n\r\nProf. Mr. Dr. L.J. van Apeldoorn: Hukum Perdata adalah peraturan-peraturan hukum yang objeknya ialah kepentingan-kepentingan khusus dan yang soal akan dipertahankannya atau tidak, diserahkan kepada yang berkepentingan.', '2022-10-28');
+INSERT INTO `article` (`article_id`, `author_name`, `article_title`, `article_text`, `article_date`, `article_pic`) VALUES
+('ar1', 'Nurul Aulia Larasati', 'Apa Itu Sworn Translator?', 'A certified translation is one which fulfills the requirements in the country in question, enabling it to be used in formal procedures, with the translator accepting responsibility for its accuracy. These requirements vary widely from country to country. While some countries allow only state-appointed translators to produce such translations, others will accept those carried out by any competent bilingual individual. Between these two extremes are countries where a certified translation can be carried out by any professional translator with the correct credentials (which may include membership of specific translation associations or the holding of certain qualifications).\r\n\r\nEnglish speaking countries such as the United Kingdom, the USA, Australia and New Zealand fall on the more relaxed end of the spectrum, and simply require certified translations to include a statement made by the translator attesting to its accuracy, along with the date, the translator\'s credentials and contact details. This is the type of certification that is required by UK government bodies such as the Home Office and the UK Border Agency, as well as by universities and most foreign embassies.\r\n\r\nEuropean countries other than the UK tend to have much stricter laws regarding who can produce a certified translation, with most appointing official certified translators based on them having obtained the local state-regulated qualification.', '2022-10-28', ''),
+('ar2', 'Nurul Aulia Larasati', 'Pengertian CV (Persekutuan Komanditer): Jenis dan Tujuan', 'CV adalah salah satu bentuk badan usaha yang dibentuk oleh dua orang atau lebih yang kemudian mempercayakan modal yang dimiliki kepada dua orang atau lebih. Hal itu dilakukan ntuk menjalankan perusahaan tersebut sekaligus dipercaya untuk memimpin perusahaan. Tujuannya agar tercapainya cita-cita bersama dengan tingkat keterlibatan masing-masing anggotanya berbeda. Oleh karena itu, di dalam CV terdapat dua sekutu yang berbeda.\r\n\r\nSementara itu ada beberapa ahli yang berpendapat bahwa CV terdiri dari sekutu komanditer dan sekutu komplementer. Sekutu komanditer (sekutu pasif) memiliki tanggung jawab untuk memberikan modal CV kepada sekutu komplementer (sekutu aktif) yang bertanggung jawab untuk menjalankan kegiatan CV.\r\n\r\nCV terbagi menjadi beberapa jenis, yaitu:\r\n\r\n1. CV Bersaham\r\nCV jenis ini memiliki karakter yang khas karena CV ini mengeluarkan saham yang bisa diambil oleh sekutu aktif maupun pasif. Masing-masing dapat mengambil satu saham atau lebih. Namun demikian, saham tersebut tidak dapat diperjualbelikan karena tidak mudah untuk menarik kembali modal yang telah disetorkan. Tujuan adanya saham untuk menghindari adanya modal beku.\r\n\r\n2. CV Murni\r\nCV jenis ini merupakan persekutuan komanditer yang pertama kali ada dan paling sederhana. Di dalam CV ini hanya terdapat satu sekutu komplementer sedangkan pihak-pihak lainnya berperan sebagai sekutu komanditer.\r\n\r\n3. CV Campuran\r\nCV campuran biasanya berasal dari firma sebagai bentuk awal. Namun dalam operasionalnya, firma tersebut memerlukan tambahan suntikan modal. Pihak yang berkenan memberikan tambahan modal berperan sebagai sekutu komanditer, sehingga firma yang menerima modal dan menjalankan usaha disebut sebagai sekutu komplementer.\r\n\r\nCV dibentuk agar sebuah badan usaha dapat menjalankan aktivitas bisnisnya dengan resmi dan legal sesuai hukum. Karena CV pada umumnya didirikan dengan akta dan didaftarkan melalui notaris sehingga mempunyai payung hukum.\r\n\r\nDalam perjalanan bisnis, seringkali kerja sama dengan pihak lain, terutama perusahaan atau instansi besar dan resmi, mensyaratkan adanya badan usaha yang legal menurut hukum. Misalkan untuk mengikuti tender dari instansi pemerintah atau perusahaan swasta, perusahaan-perusahaan yang diperbolehkan mengikuti tender tersebut adalah perusahaan yang berbentuk CV atau PT.\r\n\r\nHal ini bukan tanpa sebab. Bekerja sama dengan perusahaan yang legal dan resmi sesuai hukum memberikan jaminan keamanan yang lebih tinggi dibanding bekerja sama dengan usaha yang belum terdaftar secara hukum. Terlebih di dalam kerja sama tersebut ada transaksi yang nilainya besar.', '2022-10-28', ''),
+('ar3', 'Edinia Rosa Filiana', 'Hukum Perdata Adalah Apa? Ini Pengertiannya Menurut Para Ahli', 'Secara umum hukum perdata adalah serangkaian peraturan hukum yang mengatur hubungan subjek hukum (orang dan badan hukum) yang satu dengan subjek hukum yang lain dengan menitikberatkan pada kepentingan pribadi dari subjek hukum tersebut.\r\n\r\nHukum perdana bertujuan untuk mengatur hubungan di antara penduduk atau warga negara sehari-hari, seperti kedewasaan seseorang, perkawinan, perceraian, kematian, waris, harta benda, kegiatan usaha dan tindakan bersifat perdata lainnya.\r\n\r\nDari buku Hukum Perdata Indonesia oleh P.N.H Simanjuntak (2015), berikut pengertian hukum perdata menurut para pakar sarjana hukum:\r\n\r\nProf. Subekti, S.H.: Hukum perdata dalam arti yang luas meliputi semua hukum \"privat materiel\", yaitu segala hukum pokok yang mengatur kepentingan-kepentingan perseorangan.\r\n\r\nProf. Soediman Kartohadiprodjo, S.H.: Hukum perdata (materil) adalah kesemuanya kaidah hukum yang menentukan dan mengatur hak-hak dan kewajiban-kewajiban perdata.\r\nProf. Dr. Sudikno Mertokusumo, S.H.: Hukum perdata adalah hukum antar-perorangan yang mengatur hak dan kewajiban perorangan yang satu terhadap yang lain di dalam hubungan keluarga dan di dalam pergaulan masyarakat.\r\n\r\nProf. Dr. R. Wirjono Prodjodikoro, S.H.: Hukum perdata adalah suatu rangkaian hukum antara orang-orang atau badan hukum yang satu sama lain tentang hak dan kewajiban.\r\n\r\nProf. Mr. Dr. L.J. van Apeldoorn: Hukum Perdata adalah peraturan-peraturan hukum yang objeknya ialah kepentingan-kepentingan khusus dan yang soal akan dipertahankannya atau tidak, diserahkan kepada yang berkepentingan.', '2022-10-28', '');
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,9 @@ CREATE TABLE `client_profile` (
 --
 
 INSERT INTO `client_profile` (`user_id`, `address`, `phone_number`) VALUES
-(4, 'belwis raya', '080808080808');
+(4, 'belwis raya', '080808080808'),
+(6, 'Kota Agung', '082137568463'),
+(7, 'Kedamaian', '083543627677');
 
 -- --------------------------------------------------------
 
@@ -15262,10 +15265,16 @@ INSERT INTO `legal_list` (`service_id`, `type`, `matter`, `cost`) VALUES
 
 CREATE TABLE `legal_order` (
   `order_id` varchar(20) NOT NULL,
-  `service_id` varchar(20) NOT NULL,
   `voucher` text NOT NULL,
   `order_docs` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `legal_order`
+--
+
+INSERT INTO `legal_order` (`order_id`, `voucher`, `order_docs`) VALUES
+('LE00001', '', 'data.pdf');
 
 -- --------------------------------------------------------
 
@@ -15282,6 +15291,15 @@ CREATE TABLE `ordered` (
   `order_desc` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `ordered`
+--
+
+INSERT INTO `ordered` (`order_id`, `order_service_id`, `user_id`, `order_date`, `order_cost`, `order_desc`) VALUES
+('LE00001', 'le8', 4, '2022-10-24', 180000, 'Legal'),
+('TN00001', 'tn1', 4, '2022-10-18', 50000, 'Training'),
+('TR00001', 'tr1', 4, '2022-10-24', 350000, 'translate');
+
 -- --------------------------------------------------------
 
 --
@@ -15292,8 +15310,37 @@ CREATE TABLE `progress` (
   `order_id` varchar(20) NOT NULL,
   `progress_num` int(11) NOT NULL,
   `progress_doc` text NOT NULL,
-  `state` varchar(10) DEFAULT NULL
+  `state` tinyint(1) DEFAULT NULL,
+  `progress_desc` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `progress`
+--
+
+INSERT INTO `progress` (`order_id`, `progress_num`, `progress_doc`, `state`, `progress_desc`) VALUES
+('LE00001', 1, 'Dokumen.zip', 1, 'Mohon dicek dan ditandatangani untuk dokumen TMCFO dan PoA. Berkas dikirim melalui progress selanjutnya'),
+('LE00001', 2, '', 0, 'Harap mengunggah dokumen yang telah ditandatangani pada progress ini');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `role` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role`) VALUES
+('codev'),
+('legal'),
+('client'),
+('cpr');
 
 -- --------------------------------------------------------
 
@@ -15307,6 +15354,14 @@ CREATE TABLE `training_list` (
   `date_time` datetime NOT NULL,
   `quota` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `training_list`
+--
+
+INSERT INTO `training_list` (`service_id`, `training_class`, `date_time`, `quota`) VALUES
+('tn1', 'IP Class', '2022-10-20 08:00:00', 50),
+('tn2', 'Webinar Pemilihan Badan Usaha dan Badan Hukum dalam Memulai Bisnis', '2022-11-16 08:00:00', 100);
 
 -- --------------------------------------------------------
 
@@ -15361,11 +15416,17 @@ INSERT INTO `translate_list` (`service_id`, `lang_from`, `lang_to`, `cost`, `tra
 
 CREATE TABLE `translate_order` (
   `order_id` varchar(20) NOT NULL,
-  `service_id` varchar(20) NOT NULL,
   `order_type` text NOT NULL,
   `delivery` text NOT NULL,
   `order_docs` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `translate_order`
+--
+
+INSERT INTO `translate_order` (`order_id`, `order_type`, `delivery`, `order_docs`) VALUES
+('TR00001', 'translate', 'JNE', 'data.pdf');
 
 -- --------------------------------------------------------
 
@@ -15390,8 +15451,10 @@ INSERT INTO `user` (`user_id`, `username`, `email`, `password`, `role`, `name`) 
 (1, 'admin', 'admin@gmail.com', 'admin', 'superadmin', 'administrator'),
 (2, 'april', 'april@gmail.com', 'april', 'cpr', 'aprilia'),
 (3, 'ocha', 'ocha@gmail.com', 'ocha', 'legal', 'edinia ocha'),
-(4, 'mayang', 'mayang@gmail.com', 'mayang', 'user', 'mayang hermanda'),
-(5, 'gunawan', 'gunawan@gmail.com', 'gunawan', 'codev', 'gunawan suprapto');
+(4, 'mayang', 'mayang@gmail.com', 'mayang', 'client', 'mayang hermanda'),
+(5, 'gunawan', 'gunawan@gmail.com', 'gunawan', 'codev', 'gunawan suprapto'),
+(6, 'aprian', 'aprian@gmail.com', 'aprian', 'client', 'Aprian Yusuf'),
+(7, 'chika', 'chantika@gmail.com', 'chika', 'client', 'Chantika Aurrelia');
 
 --
 -- Indexes for dumped tables
@@ -15445,7 +15508,6 @@ ALTER TABLE `legal_list`
 -- Indexes for table `legal_order`
 --
 ALTER TABLE `legal_order`
-  ADD KEY `service_id` (`service_id`),
   ADD KEY `order_id` (`order_id`);
 
 --
@@ -15453,8 +15515,7 @@ ALTER TABLE `legal_order`
 --
 ALTER TABLE `ordered`
   ADD PRIMARY KEY (`order_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `order_service_id` (`order_service_id`);
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `progress`
@@ -15478,8 +15539,7 @@ ALTER TABLE `translate_list`
 -- Indexes for table `translate_order`
 --
 ALTER TABLE `translate_order`
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `service_id` (`service_id`);
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `user`
@@ -15495,7 +15555,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -15518,17 +15578,13 @@ ALTER TABLE `comment`
 -- Constraints for table `legal_order`
 --
 ALTER TABLE `legal_order`
-  ADD CONSTRAINT `legal_order_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `legal_list` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `legal_order_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `ordered` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ordered`
 --
 ALTER TABLE `ordered`
-  ADD CONSTRAINT `ordered_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `ordered_ibfk_2` FOREIGN KEY (`order_service_id`) REFERENCES `translate_list` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `ordered_ibfk_3` FOREIGN KEY (`order_service_id`) REFERENCES `legal_list` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `ordered_ibfk_4` FOREIGN KEY (`order_service_id`) REFERENCES `training_list` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `ordered_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `progress`
@@ -15540,8 +15596,7 @@ ALTER TABLE `progress`
 -- Constraints for table `translate_order`
 --
 ALTER TABLE `translate_order`
-  ADD CONSTRAINT `translate_order_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `ordered` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `translate_order_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `translate_list` (`service_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `translate_order_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `ordered` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
