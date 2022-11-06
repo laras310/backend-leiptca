@@ -94,7 +94,9 @@ def dictionary(language, alphabet):
   else :
     return jsonify({"msg":"gada bahasanya"})
   data = cursor.fetchall()
-  return jsonify(data)
+  data2= jsonify(data)
+  data2.headers.add('Access-Control-Allow-Origin', '*')
+  return data2
 
 @app.route('/user/<id>', methods=['GET'])
 def user(id):
