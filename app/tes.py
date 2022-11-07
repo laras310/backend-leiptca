@@ -1,7 +1,7 @@
 from urllib import response
 import mysql.connector
 from flask import Flask, make_response, render_template, request, redirect, url_for, session, send_file, abort, jsonify
-from flask_cors import CORS
+# from flask_cors import CORS
 import datetime
 
 mydb = mysql.connector.connect(
@@ -13,7 +13,7 @@ mydb = mysql.connector.connect(
 
 # inisiasi variabel aplikasi
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 cursor = mydb.cursor(dictionary=True,buffered=True)
 app.secret_key="abcd"
 
@@ -98,11 +98,43 @@ def article(by, val):
   else:
     return jsonify({"msg":"tidak cocok"})
 
-@app.route('/comment/<article_id>', methods=['GET'])
+@app.route('/comment/<article_id>', methods=['GET','POST'])
 def comment(article_id):
-  cursor.execute('SELECT * FROM comment WHERE article_id = "{}" ORDER BY comment_date DESC'.format(article_id))
-  comments = cursor.fetchall()
-  return jsonify(comments)
+  if request.method =='GET':
+    cursor.execute('SELECT * FROM comment WHERE article_id = "{}" ORDER BY comment_date DESC'.format(article_id))
+    comments = cursor.fetchall()
+    return jsonify(comments)
+  
+  elif request.method == 'POST':
+    if 'name' in session :
+      if session['role'] == "client":
+        user_id = session['user_id']
+        comment_text = request.json["comment_text"]
+        date = datetime.datetime.now().date()
+        cursor.execute('SELECT comment_id FROM comment ORDER BY comment_id DESC')
+        comment = cursor.fetchone()
+        if comment:
+          comment_id = "com"+str(int(comment['comment_id'][3:])+1)
+        else:
+          comment_id = "com1"
+        cursor.execute('INSERT INTO comment (comment_id, user_id, article_id, comment_text, comment_date) VALUES (%s,%s,%s,%s,%s)', (comment_id, user_id, article_id, comment_text, date))
+        mydb.commit()
+        return jsonify(comment_id)
+      return jsonify({"msg":"Has no access"})
+    return jsonify({"msg":"blm login"})
+  return ('',204)
+
+@app.route('/delete_comment/<comment_id>', methods=['POST'])
+def delete_comment(comment_id):
+  cursor.execute('SELECT user_id FROM comment WHERE comment_id = %s',([comment_id]))
+  user=cursor.fetchone()
+
+  if session['user_id'] == user['user_id'] or session['role'] != "client":
+    cursor.execute('DELETE FROM comment WHERE comment_id = %s',([comment_id]))
+    mydb.commit()
+    return jsonify({"msg":"comment deleted"})
+  else:
+    return jsonify({"msg":"login first"})
 
 @app.route('/dictionary/<language>/<alphabet>', methods=['GET'])
 def dictionary(language, alphabet):
@@ -134,14 +166,18 @@ def user(id):
 
 @app.route('/del_user/<id>', methods=['POST'])
 def del_user(id):
-    cursor.execute('SELECT * FROM user where user_id = %s',([id]))
-    user=cursor.fetchone()
-    if user :
-      cursor.execute('DELETE FROM user where user_id = %s',([id]))
-      mydb.commit()
-      return jsonify({"msg":"user terhapus"})
-    else:
-      return jsonify({"msg":"user tidak ditemukan"})
+  if 'role' in session:
+    if session['role'] == "superadmin":
+      cursor.execute('SELECT * FROM user where user_id = %s',([id]))
+      user=cursor.fetchone()
+      if user :
+        cursor.execute('DELETE FROM user where user_id = %s',([id]))
+        mydb.commit()
+        return jsonify({"msg":"user terhapus"})
+      else:
+        return jsonify({"msg":"user tidak ditemukan"})
+    return jsonify({"msg":"has no access"})
+  return jsonify({"msg":"has not logged in"})
 
 @app.route('/edit_user/<id>', methods=['POST'])
 def edit_user(id):
@@ -214,7 +250,7 @@ def add_admin():
   return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
 @app.route('/roles', methods=['GET'])
-def option():
+def roles():
   cursor.execute('SELECT * FROM roles')
   roles = cursor.fetchall()
   return jsonify(roles)
@@ -247,34 +283,6 @@ def services_list(service_type):
   services = cursor.fetchall()
   return jsonify(services)
 
-
-# @app.route('/add_progress/<id>', methods=['POST'])
-# def add_progress(id):
-#   if request.method == 'POST' and 'status' in request.json and 'desc' in request.json:
-#     status = request.json["status"]
-#     email = request.json["email"]
-#     password = request.json["password"]
-#     role = request.json["role"]
-#     phone_number = request.json["phone_number"]
-
-#     cursor.execute('SELECT status FROM user where email = %s',([email]))
-#     user = cursor.fetchone()
-  
-#     if user:
-#       return jsonify({"msg":"usernya udah ada"})
-    
-#     else:
-#       cursor.execute('INSERT INTO user (email, name, password, role) VALUES (%s,%s,%s,%s)', (email, name, password, role))
-#       mydb.commit()
-#       cursor.execute('SELECT user_id FROM user where email = %s',([email]))
-#       user_id = cursor.fetchone()
-#       print(user_id)
-#       cursor.execute('INSERT INTO additional_info (phone_number, user_id) VALUES (%s,%s)', (phone_number,user_id[0]))
-#       mydb.commit()
-#       cursor.execute('SELECT * FROM user where email = %s',([email]))
-#       new_user = cursor.fetchone()
-#       return jsonify(new_user)
-#   return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
 @app.route('/legal_order', methods=['POST'])
 def legal_order():
