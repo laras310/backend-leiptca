@@ -2,7 +2,7 @@ from urllib import response
 import mysql.connector
 from flask import Flask, make_response, render_template, request, redirect, url_for, session, send_file, abort, jsonify
 from flask_cors import CORS
-from datetime import date
+import datetime
 
 mydb = mysql.connector.connect(
   host="127.0.0.1",
@@ -14,13 +14,25 @@ mydb = mysql.connector.connect(
 # inisiasi variabel aplikasi
 app = Flask(__name__)
 CORS(app)
-cursor = mydb.cursor(dictionary=True)
+cursor = mydb.cursor(dictionary=True,buffered=True)
 app.secret_key="abcd"
+
+@app.route('/current_user', methods=['GET'])
+def current_user():
+    if 'name' in session:
+      return jsonify({
+          "name":session['name'],
+          "role":session['role'],
+          "email":session['email'],
+          "user_id":session['user_id']
+        })
+    else:
+        return jsonify({'error': 'Not logged in'})
 
 @app.route('/login', methods=['POST'])
 def login():
   if not 'loggedin' in session:
-    if request.method == 'POST' and 'email' in request.json and 'password' in request.json:
+    if 'email' in request.json and 'password' in request.json:
       email = request.json['email']
       password = request.json['password']
 
@@ -29,15 +41,21 @@ def login():
       
       # jika user ditemukan
       if user:
-          session['loggedin'] = True
-          session['username'] = user['username']
+          session['name'] = user['name']
+          session['user_id'] = user['user_id']
           session['role'] = user['role']
+          session['email'] = user['email']
 
-          return jsonify({"msg":"login sukses"})
-      else:
-        return jsonify({"msg":"pw salah"})
-    # return jsonify({"msg":"pw salah"})
-  return jsonify({"msg":"render template login"})
+          return redirect(url_for('current_user'))
+      
+      # jika user tidak ditemukan
+      return jsonify({'error': 'Invalid email or password'})
+    
+    # jika parameter tidak lengkap
+    return jsonify({'error': 'Invalid parameter'})
+  
+  # jika sudah login
+  return jsonify({'error': 'Already logged in'})
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -101,14 +119,18 @@ def dictionary(language, alphabet):
 
 @app.route('/user/<id>', methods=['GET'])
 def user(id):
-  if not id=="all":
-    cursor.execute('SELECT * FROM user where user_id = %s',([id]))
-    user = cursor.fetchone()
-    return jsonify(user)
-  else:
-    cursor.execute('SELECT * FROM user ORDER BY name ASC')
-    users = cursor.fetchall()
-    return jsonify(users)
+  if 'role' in session:
+    if session['role'] == "superadmin":
+      if not id=="all":
+        cursor.execute('SELECT * FROM user where user_id = %s',([id]))
+        user = cursor.fetchone()
+        return jsonify(user)
+      else:
+        cursor.execute('SELECT * FROM user ORDER BY name ASC')
+        users = cursor.fetchall()
+        return jsonify(users)
+    return jsonify({"msg":"has no access"})
+  return jsonify({"msg":"has not logged in"})
 
 @app.route('/del_user/<id>', methods=['POST'])
 def del_user(id):
@@ -254,27 +276,35 @@ def services_list(service_type):
 #       return jsonify(new_user)
 #   return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
-# @app.route('/legal_order', methods=['POST'])
-# def legal_order():
-#   if request.method == 'POST' and 'legal_service' in request.json and 'delivery' in request.json and 'voucher' in request.json:
-#     legal_service_id = request.json["legal_service_id"]
-#     delivery = request.json["delivery"]
-#     voucher = request.json["voucher"]
-#     date = date.today()
+@app.route('/legal_order', methods=['POST'])
+def legal_order():
+  if 'role' in session:
+    if 'legal_service_id' in request.json:
+      legal_service_id = request.json["legal_service_id"]
+      date = datetime.datetime.now().date()
+      user_id = session['user_id']
+        
+      cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "LE%" ORDER BY order_id DESC')
+      order = cursor.fetchone()
+      if order:
+        order_id = "LE0000"+str(int(order['order_id'][2:])+1)
+      else:
+        order_id = "LE0000"+"1"
+      
+      cursor.execute('SELECT cost FROM legal_list WHERE service_id = %s',([legal_service_id]))
+      cost = cursor.fetchone()
 
-#     cursor.execute('SELECT user_id FROM user WHERE ')
-  
-#     if user:
-#       return jsonify({"msg":"usernya udah ada"})
-    
-#     else:
-#       cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s)', (order_id, legal_service_id, user_id, date, cost, desc))
-#       mydb.commit()
-#       cursor.execute('SELECT * FROM user where email = %s',([email]))
-#       new_user=cursor.fetchone()
-#       return jsonify(new_user)
-#   return jsonify({"msg":"salah method/gada form nama/email/pq"})
+      if 'voucher' in request.json:
+        voucher = request.json["voucher"]
+        cursor.execute('INSERT INTO legal_order (order_id, voucher) VALUES (%s,%s)', (order_id,voucher))
+        mydb.commit()
 
+      cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "legal")', (order_id, legal_service_id, user_id, date, cost['cost']))
+      mydb.commit()
 
-if __name__ == 'main':
-    app.run(host='0.0.0.0',port=8081, debug=True)
+      return jsonify(order_id)
+    return jsonify({"msg":"salah method/gada form nama/email/pq"})
+  return jsonify({"msg":"not logged in"})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0',port=8080, debug=True)
