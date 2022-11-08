@@ -29,6 +29,16 @@ def current_user():
     else:
         return jsonify({'error': 'Not logged in'})
 
+@app.route('/admin_list', methods=['GET'])
+def admin_list():
+  if 'name' in session:
+    if not session['role'] == "client":
+      cursor.execute('SELECT * FROM user where role != "client"')
+      admin = cursor.fetchall()
+      return jsonify(admin)
+    return jsonify({"msg":"Has no access"})
+  return jsonify({"msg":"Has not login"})
+
 @app.route('/login', methods=['POST'])
 def login():
   if not 'loggedin' in session:
@@ -98,6 +108,76 @@ def article(by, val):
   else:
     return jsonify({"msg":"tidak cocok"})
 
+@app.route('/del_article/<id>', methods=['POST'])
+def del_article(id):
+  if 'name' in session:
+    if session['role'] == "superadmin" or session['role'] == "codev":
+      cursor.execute('DELETE FROM comment WHERE article_id = %s',([id]))
+      mydb.commit()
+      cursor.execute('DELETE FROM article WHERE article_id = %s',([id]))
+      mydb.commit()
+      return jsonify({"msg":"article deleted"})
+    else:
+      return jsonify({"msg":"Has no access"})
+  else:
+    return jsonify({"msg":"Has not login"})
+
+@app.route('/add_article', methods=['POST'])
+def add_article():
+  if 'name' in session:
+    if session['role'] == "superadmin" or session['role'] == "codev":
+      title = request.json["title"]
+      author_name = request.json["author_name"]
+      coauthor_name = request.json["coauthor_name"]
+      article_text = request.json["article_text"]
+      date= datetime.datetime.now().date()
+      article_pic = request.json["article_pic"]
+      
+      cursor.execute('SELECT article_id FROM article ORDER BY article_id DESC')
+      article = cursor.fetchone()
+      if article:
+        article_id = "ar"+str(int(article['article_id'][2:])+1)
+      else:
+        article_id = "ar1"
+      
+      cursor.execute('INSERT INTO article (article_id, author_name, coauthor_name, article_title, article_text, article_date, article_pic) VALUES (%s,%s,%s,%s,%s,%s,%s)', 
+      (article_id, author_name, coauthor_name, title, article_text, date, article_pic))
+      mydb.commit()
+
+      return jsonify(article_id)
+    else:
+      return jsonify({"msg":"Has no access"})
+  else:
+    return jsonify({"msg":"Has not login"})
+
+@app.route('/edit_article/<id>', methods=['POST'])
+def edit_article(id):
+  if 'name' in session:
+    if session['role'] == "superadmin" or session['role'] == "codev":
+      if 'title' in request.json:
+        title = request.json["title"]
+        cursor.execute('UPDATE article SET article_title = %s WHERE article_id = %s',(title,id))
+        mydb.commit()
+
+      if 'author_name' in request.json:
+        author_name = request.json["author_name"]
+        cursor.execute('UPDATE article SET author_name = %s WHERE article_id = %s',(author_name,id))
+        mydb.commit()
+
+      if 'coauthor_name' in request.json:
+        coauthor_name = request.json["coauthor_name"]
+        cursor.execute('UPDATE article SET coauthor_name = %s WHERE article_id = %s',(coauthor_name,id))
+        mydb.commit()
+
+      if 'article_text' in request.json:
+        article_text = request.json["article_text"]
+        cursor.execute('UPDATE article SET article_text = %s WHERE article_id = %s',(article_text,id))
+        mydb.commit()
+    else:
+      return jsonify({"msg":"Has no access"})
+  else:
+    return jsonify({"msg":"Has not login"})
+
 @app.route('/comment/<article_id>', methods=['GET','POST'])
 def comment(article_id):
   if request.method =='GET':
@@ -155,7 +235,7 @@ def user(id):
     if session['role'] == "superadmin":
       if not id=="all":
         cursor.execute('SELECT * FROM user where user_id = %s',([id]))
-        user = cursor.fetchone()
+        user = cursor.fetchall()
         return jsonify(user)
       else:
         cursor.execute('SELECT * FROM user ORDER BY name ASC')

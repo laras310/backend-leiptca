@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2022 at 05:41 PM
+-- Generation Time: Nov 08, 2022 at 09:16 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -24,12 +24,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `additional_info`
+--
+
+CREATE TABLE `additional_info` (
+  `user_id` int(11) NOT NULL,
+  `address` text NOT NULL,
+  `phone_number` varchar(13) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `additional_info`
+--
+
+INSERT INTO `additional_info` (`user_id`, `address`, `phone_number`) VALUES
+(4, 'belwis raya', '080808080808'),
+(6, 'Kota Agung', '082137568463'),
+(7, 'Kedamaian', '083543627677');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `article`
 --
 
 CREATE TABLE `article` (
   `article_id` varchar(20) NOT NULL,
   `author_name` text NOT NULL,
+  `coauthor_name` text DEFAULT NULL,
   `article_title` text NOT NULL,
   `article_text` text NOT NULL,
   `article_date` date NOT NULL,
@@ -40,31 +62,10 @@ CREATE TABLE `article` (
 -- Dumping data for table `article`
 --
 
-INSERT INTO `article` (`article_id`, `author_name`, `article_title`, `article_text`, `article_date`, `article_pic`) VALUES
-('ar1', 'Nurul Aulia Larasati', 'Apa Itu Sworn Translator?', 'A certified translation is one which fulfills the requirements in the country in question, enabling it to be used in formal procedures, with the translator accepting responsibility for its accuracy. These requirements vary widely from country to country. While some countries allow only state-appointed translators to produce such translations, others will accept those carried out by any competent bilingual individual. Between these two extremes are countries where a certified translation can be carried out by any professional translator with the correct credentials (which may include membership of specific translation associations or the holding of certain qualifications).\r\n\r\nEnglish speaking countries such as the United Kingdom, the USA, Australia and New Zealand fall on the more relaxed end of the spectrum, and simply require certified translations to include a statement made by the translator attesting to its accuracy, along with the date, the translator\'s credentials and contact details. This is the type of certification that is required by UK government bodies such as the Home Office and the UK Border Agency, as well as by universities and most foreign embassies.\r\n\r\nEuropean countries other than the UK tend to have much stricter laws regarding who can produce a certified translation, with most appointing official certified translators based on them having obtained the local state-regulated qualification.', '2022-10-28', ''),
-('ar2', 'Nurul Aulia Larasati', 'Pengertian CV (Persekutuan Komanditer): Jenis dan Tujuan', 'CV adalah salah satu bentuk badan usaha yang dibentuk oleh dua orang atau lebih yang kemudian mempercayakan modal yang dimiliki kepada dua orang atau lebih. Hal itu dilakukan ntuk menjalankan perusahaan tersebut sekaligus dipercaya untuk memimpin perusahaan. Tujuannya agar tercapainya cita-cita bersama dengan tingkat keterlibatan masing-masing anggotanya berbeda. Oleh karena itu, di dalam CV terdapat dua sekutu yang berbeda.\r\n\r\nSementara itu ada beberapa ahli yang berpendapat bahwa CV terdiri dari sekutu komanditer dan sekutu komplementer. Sekutu komanditer (sekutu pasif) memiliki tanggung jawab untuk memberikan modal CV kepada sekutu komplementer (sekutu aktif) yang bertanggung jawab untuk menjalankan kegiatan CV.\r\n\r\nCV terbagi menjadi beberapa jenis, yaitu:\r\n\r\n1. CV Bersaham\r\nCV jenis ini memiliki karakter yang khas karena CV ini mengeluarkan saham yang bisa diambil oleh sekutu aktif maupun pasif. Masing-masing dapat mengambil satu saham atau lebih. Namun demikian, saham tersebut tidak dapat diperjualbelikan karena tidak mudah untuk menarik kembali modal yang telah disetorkan. Tujuan adanya saham untuk menghindari adanya modal beku.\r\n\r\n2. CV Murni\r\nCV jenis ini merupakan persekutuan komanditer yang pertama kali ada dan paling sederhana. Di dalam CV ini hanya terdapat satu sekutu komplementer sedangkan pihak-pihak lainnya berperan sebagai sekutu komanditer.\r\n\r\n3. CV Campuran\r\nCV campuran biasanya berasal dari firma sebagai bentuk awal. Namun dalam operasionalnya, firma tersebut memerlukan tambahan suntikan modal. Pihak yang berkenan memberikan tambahan modal berperan sebagai sekutu komanditer, sehingga firma yang menerima modal dan menjalankan usaha disebut sebagai sekutu komplementer.\r\n\r\nCV dibentuk agar sebuah badan usaha dapat menjalankan aktivitas bisnisnya dengan resmi dan legal sesuai hukum. Karena CV pada umumnya didirikan dengan akta dan didaftarkan melalui notaris sehingga mempunyai payung hukum.\r\n\r\nDalam perjalanan bisnis, seringkali kerja sama dengan pihak lain, terutama perusahaan atau instansi besar dan resmi, mensyaratkan adanya badan usaha yang legal menurut hukum. Misalkan untuk mengikuti tender dari instansi pemerintah atau perusahaan swasta, perusahaan-perusahaan yang diperbolehkan mengikuti tender tersebut adalah perusahaan yang berbentuk CV atau PT.\r\n\r\nHal ini bukan tanpa sebab. Bekerja sama dengan perusahaan yang legal dan resmi sesuai hukum memberikan jaminan keamanan yang lebih tinggi dibanding bekerja sama dengan usaha yang belum terdaftar secara hukum. Terlebih di dalam kerja sama tersebut ada transaksi yang nilainya besar.', '2022-10-28', ''),
-('ar3', 'Edinia Rosa Filiana', 'Hukum Perdata Adalah Apa? Ini Pengertiannya Menurut Para Ahli', 'Secara umum hukum perdata adalah serangkaian peraturan hukum yang mengatur hubungan subjek hukum (orang dan badan hukum) yang satu dengan subjek hukum yang lain dengan menitikberatkan pada kepentingan pribadi dari subjek hukum tersebut.\r\n\r\nHukum perdana bertujuan untuk mengatur hubungan di antara penduduk atau warga negara sehari-hari, seperti kedewasaan seseorang, perkawinan, perceraian, kematian, waris, harta benda, kegiatan usaha dan tindakan bersifat perdata lainnya.\r\n\r\nDari buku Hukum Perdata Indonesia oleh P.N.H Simanjuntak (2015), berikut pengertian hukum perdata menurut para pakar sarjana hukum:\r\n\r\nProf. Subekti, S.H.: Hukum perdata dalam arti yang luas meliputi semua hukum \"privat materiel\", yaitu segala hukum pokok yang mengatur kepentingan-kepentingan perseorangan.\r\n\r\nProf. Soediman Kartohadiprodjo, S.H.: Hukum perdata (materil) adalah kesemuanya kaidah hukum yang menentukan dan mengatur hak-hak dan kewajiban-kewajiban perdata.\r\nProf. Dr. Sudikno Mertokusumo, S.H.: Hukum perdata adalah hukum antar-perorangan yang mengatur hak dan kewajiban perorangan yang satu terhadap yang lain di dalam hubungan keluarga dan di dalam pergaulan masyarakat.\r\n\r\nProf. Dr. R. Wirjono Prodjodikoro, S.H.: Hukum perdata adalah suatu rangkaian hukum antara orang-orang atau badan hukum yang satu sama lain tentang hak dan kewajiban.\r\n\r\nProf. Mr. Dr. L.J. van Apeldoorn: Hukum Perdata adalah peraturan-peraturan hukum yang objeknya ialah kepentingan-kepentingan khusus dan yang soal akan dipertahankannya atau tidak, diserahkan kepada yang berkepentingan.', '2022-10-28', '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `client_profile`
---
-
-CREATE TABLE `client_profile` (
-  `user_id` int(11) NOT NULL,
-  `address` text NOT NULL,
-  `phone_number` varchar(13) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `client_profile`
---
-
-INSERT INTO `client_profile` (`user_id`, `address`, `phone_number`) VALUES
-(4, 'belwis raya', '080808080808'),
-(6, 'Kota Agung', '082137568463'),
-(7, 'Kedamaian', '083543627677');
+INSERT INTO `article` (`article_id`, `author_name`, `coauthor_name`, `article_title`, `article_text`, `article_date`, `article_pic`) VALUES
+('ar2', 'Edinia Ocha', 'administrator', 'Mutasi TNI, Peraih 1.000 Jam Terbang F-16 Fighting Falcon Jabat Pangkogabwilhan II', 'Andyawan Martono sebelumnya pernah menjabat sebagai Danjen Akademi TNI. Dia adalah Perwira Tinggi (Pati) TNI AU lulusan Akademi Angkatan Udara (AAU) 1989. Pria kelahiran Malang, 30 April 1967 ini mengawali karier militernya sebagai penerbang pesawat tempur F-16 Fighting Falcon di Skadron Udara 3 Lanud Iswahyudi, Jawa Timur sejak berpangkat Letda hingga Kolonel. Penerbang tempur yang pernah meraih 1.000 jam terbang F-16 Fighting Falcon dengan callsign “Sable” diketahui merupakan putra dari mantan Bupati Bekasi Brigjen TNI (Purn) Suko Martono. Setelah mengikuti pendidikan Sesko TNI pada 2013 karier Marsdya TNI Andyawan Martono semakin cemerlang dengan menduduki beberapa jabatan strategis seperti Danlanud Roesmin Nurjadin, Pekan Baru. Kemudian Pangkosekhanudnas III Makassar dan Danlanud Iswahyudi. Marsdya TNI Andyawan Martono juga pernah menjabat sebagai Pangkoopsau III.', '2022-10-20', ''),
+('ar3', 'Edinia Rosa Filiana', NULL, 'Hukum Perdata Adalah Apa? Ini Pengertiannya Menurut Para Ahli', 'Secara umum hukum perdata adalah serangkaian peraturan hukum yang mengatur hubungan subjek hukum (orang dan badan hukum) yang satu dengan subjek hukum yang lain dengan menitikberatkan pada kepentingan pribadi dari subjek hukum tersebut.\r\n\r\nHukum perdana bertujuan untuk mengatur hubungan di antara penduduk atau warga negara sehari-hari, seperti kedewasaan seseorang, perkawinan, perceraian, kematian, waris, harta benda, kegiatan usaha dan tindakan bersifat perdata lainnya.\r\n\r\nDari buku Hukum Perdata Indonesia oleh P.N.H Simanjuntak (2015), berikut pengertian hukum perdata menurut para pakar sarjana hukum:\r\n\r\nProf. Subekti, S.H.: Hukum perdata dalam arti yang luas meliputi semua hukum \"privat materiel\", yaitu segala hukum pokok yang mengatur kepentingan-kepentingan perseorangan.\r\n\r\nProf. Soediman Kartohadiprodjo, S.H.: Hukum perdata (materil) adalah kesemuanya kaidah hukum yang menentukan dan mengatur hak-hak dan kewajiban-kewajiban perdata.\r\nProf. Dr. Sudikno Mertokusumo, S.H.: Hukum perdata adalah hukum antar-perorangan yang mengatur hak dan kewajiban perorangan yang satu terhadap yang lain di dalam hubungan keluarga dan di dalam pergaulan masyarakat.\r\n\r\nProf. Dr. R. Wirjono Prodjodikoro, S.H.: Hukum perdata adalah suatu rangkaian hukum antara orang-orang atau badan hukum yang satu sama lain tentang hak dan kewajiban.\r\n\r\nProf. Mr. Dr. L.J. van Apeldoorn: Hukum Perdata adalah peraturan-peraturan hukum yang objeknya ialah kepentingan-kepentingan khusus dan yang soal akan dipertahankannya atau tidak, diserahkan kepada yang berkepentingan.', '2022-10-25', ''),
+('ar4', 'admin', 'nurul aulia larasati', 'Ferdy Sambo Kerap Bawa 3 Jenis Senpi saat Bepergian', 'JAKARTA - Mantan Ajudan Ferdy Sambo , Daden Miftahul Haq mengaku kerap melihat mantan Kadiv Propam membawa senjata api Wilson Combat, Cabot, hingga Kimber saat mengantarkannya bepergian. Hal itu disampaikannya saat memberikan kesaksiannya dalam sidang dugaan kasus pembunuhan Brigadir J dengan terdakwa Ferdy Sambo dan Putri Candrawathi, Selasa (8/11/2022). Baca juga: Rayakan Ultah Pernikahan, Sambo dan Putri Suapi Ajudan serta Asisten Rumah Tangga \'Dalam perjalanan sehari-hari mulai dari Semarang atau sebelumnya, kalau saudara mengantar terdakwa, apakah selalu di mobil selalu ada senjata? Senjata milik siapa?\' tanya hakim di persidangan, Selasa (8/11/2022). \'Siap, ada Yang Mulia. Senjata milik bapak Yang Mulia. Itu ada Wilson Combat Yang Mulia, sama Cabot, itu ada di koper,\' jawab Daden. Menurutnya, dua senjata itu kerap dilihatnya saat dia mengawal dan mengantarkan Ferdy Sambo sebagai ajudan menggunakan mobil dinas. Adapun keduanya merupakan senjata jenis pistol berkaliber 45 mm. \'Setiap berangkat apakah senjata itu selalu terisi? Selain dua senjata itu, apa lagi senjata yang ada? Laras panjang?\' tanya hakim. \'Tidak, yang mulia. (Senjata) Kimber Yang Mulia. Itu yang kecil (jenis pistol) yang mulia,\' tuturnya. Menurut Daden, senjata Kimber tersebut kerap ada di tas kecil, sedangkan senjata laras lanjang itu dipegang dan milik ajudan Sambo, yang mana selalu ada di tempat duduk ajudan. Adapun para ajudan, selain membawa senjata laras panjang MPX, juga dibekali senjata jenis pistol. \'Untuk protap senjata Yang Mulia, setiap ajudan memiliki senjata sendiri-sendiri yang mulia, atau biasa disebut senjata organik. Untuk senjata keamanan di perjalanan itu menggunakan senjata MPX yang mulia, senjata panjang,\' paparnya. Adapun para ajudan, lanjut Daden, membawa pula senjata jenis pistol organik, seperti Glock, HS, dan Sig Sauer. Misalnya saja dia yang memakai Glock 17, kalau Adzan Romer memakai Glock 17, dan Yogi memakai Sig Sauer.', '2022-11-08', 'sambo.jpg');
 
 -- --------------------------------------------------------
 
@@ -85,8 +86,8 @@ CREATE TABLE `comment` (
 --
 
 INSERT INTO `comment` (`comment_id`, `user_id`, `article_id`, `comment_text`, `comment_date`) VALUES
-('com11', 1, 'ar1', 'terimakasih, sangat bermanfaat', '2022-10-28'),
-('com21', 1, 'ar2', 'artikelnya sangat bagus', '2022-10-28');
+('com3', 1, 'ar2', 'artikelnya sangat bagus', '2022-10-28'),
+('com4', 13, 'ar4', 'Hukum seberat-beratnya jangan kasih ampun!', '2022-11-08');
 
 -- --------------------------------------------------------
 
@@ -15238,7 +15239,7 @@ CREATE TABLE `legal_list` (
   `service_id` varchar(20) NOT NULL,
   `type` text NOT NULL,
   `matter` text NOT NULL,
-  `cost` text NOT NULL
+  `cost` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -15246,16 +15247,42 @@ CREATE TABLE `legal_list` (
 --
 
 INSERT INTO `legal_list` (`service_id`, `type`, `matter`, `cost`) VALUES
-('le1', 'Construction', 'Construction Agreement', 'Hourly/lumpsum with approximate hours\r\n(depends on matter)\r\n'),
-('le10', 'Legal Corporate/Investment', 'Financing Agreement', 'Hourly/lumpsum with approximate hours\r\n(depends on matter)'),
-('le2', 'Construction', 'Construction Services Business Entity\r\n(BUJK)\r\n', 'TBA'),
-('le3', 'Construction', 'Construction Services Business Licence\r\n(IUJK)', 'TBA'),
-('le4', 'Construction', 'Buiding Approval (PBG) ', 'TBA'),
-('le5', 'Employment', 'Collective Labor Agreements', 'Hourly/lumpsum with approximate hours\r\nIDR 7.000.000 – IDR 20.000.000'),
-('le6', 'Employement', 'Employment Agreement', 'Hourly/lumpsum with approximate hours\r\nIDR 7.000.000 – IDR 15.000.000'),
-('le7', 'Employment', 'Personal Permit (KITAS, KITAP, VISA,\r\netc)', 'TBA'),
-('le8', 'Legal Corporate/Investment', 'Bankruptcy & Suspension of Debt Payment\r\nObligation', 'Hourly/lumpsum with approximate hours\r\nIDR 180.000.000 – IDR 300.000.000'),
-('le9', 'Legal Corporate/Investment', 'Business Closure', 'TBA');
+('le1', 'Other Permit/Licensing', 'Bookkeeping in foreign language and foreign currency', 4000000),
+('le10', 'Trademark', 'File Application', 4000000),
+('le11', 'Trademark', 'File & Search', 4300000),
+('le12', 'Trademark', 'Hearing Response', 3000000),
+('le13', 'Trademark', 'Appeal', 6000000),
+('le14', 'Trademark', 'Opposition/Rebuttal', 3500000),
+('le15', 'Trademark', 'Cancellation Suit', 65000000),
+('le16', 'Trademark', 'Trademark Search', 500000),
+('le17', 'Trademark', 'Official Trademark Search (By Registry)', 700000),
+('le18', 'Trademark', 'Letter to Other Party (Warning Letter/Demand \r\nLetter/Others)', 10999999),
+('le19', 'Trademark', 'Response to Official Letter from Registry', 0),
+('le2', 'Other Permit/Licensing', 'Food Production Certificate (SPP-IRT) ', 9000000),
+('le20', 'Trademark', 'Trademark Renewal', 3500000),
+('le21', 'Trademark', 'Trademark Renewal (After 6 months grace \r\nperiod)', 4300000),
+('le22', 'Trademark', 'Certificate', 0),
+('le23', 'Patent', 'File in Indonesia (NON PCT', 45000000),
+('le24', 'Patent', 'Additional Claim', 75000),
+('le25', 'Patent', 'Substantive', 5000000),
+('le26', 'Patent', 'Patent Search', 500000),
+('le27', 'Patent', 'Official Patent Search (By Registry)', 700000),
+('le28', 'Patent', 'Publication', 100000),
+('le29', 'Patent', 'F12', 0),
+('le3', 'Other Permit/Licensing', 'Halal Permit', 10999999),
+('le30', 'Patent', 'Grant Allowance Notification', 2000000),
+('le31', 'Patent', 'Certificate (Report & Forward)', 1500000),
+('le32', 'Industrial Design', 'Registration', 4000000),
+('le33', 'Industrial Design', 'Search', 500000),
+('le34', 'Industrial Design', 'Publication', 500000),
+('le35', 'Industrial Design', 'Certificate (Report & Forward)', 1000000),
+('le36', 'Copyright', 'Recordation', 2300000),
+('le4', 'Other Permit/Licensing', 'Indonesian National Standard (SNI) Certificate', 20000000),
+('le5', 'Other Permit/Licensing', 'International Standard Organization (ISO)', 20000000),
+('le6', 'Other Permit/Licensing', 'Manual and guarantee registration', 7500000),
+('le7', 'Other Permit/Licensing', 'Medical business license', 10999999),
+('le8', 'Other Permit/Licensing', 'National Food and Drug Agency permit (BPOM)', 9000000),
+('le9', 'Other Permit/Licensing', 'PKRT', 10999999);
 
 -- --------------------------------------------------------
 
@@ -15309,18 +15336,20 @@ INSERT INTO `ordered` (`order_id`, `order_service_id`, `user_id`, `order_date`, 
 CREATE TABLE `progress` (
   `order_id` varchar(20) NOT NULL,
   `progress_num` int(11) NOT NULL,
+  `progress_name` text NOT NULL,
   `progress_doc` text NOT NULL,
   `state` tinyint(1) DEFAULT NULL,
-  `progress_desc` text NOT NULL
+  `progress_desc` text NOT NULL,
+  `status` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `progress`
 --
 
-INSERT INTO `progress` (`order_id`, `progress_num`, `progress_doc`, `state`, `progress_desc`) VALUES
-('LE00001', 1, 'Dokumen.zip', 1, 'Mohon dicek dan ditandatangani untuk dokumen TMCFO dan PoA. Berkas dikirim melalui progress selanjutnya'),
-('LE00001', 2, '', 0, 'Harap mengunggah dokumen yang telah ditandatangani pada progress ini');
+INSERT INTO `progress` (`order_id`, `progress_num`, `progress_name`, `progress_doc`, `state`, `progress_desc`, `status`) VALUES
+('LE00001', 1, '', 'Dokumen.zip', 1, 'Mohon dicek dan ditandatangani untuk dokumen TMCFO dan PoA. Berkas dikirim melalui progress selanjutnya', ''),
+('LE00001', 2, '', '', 0, 'Harap mengunggah dokumen yang telah ditandatangani pada progress ini', '');
 
 -- --------------------------------------------------------
 
@@ -15436,7 +15465,6 @@ INSERT INTO `translate_order` (`order_id`, `order_type`, `delivery`, `order_docs
 
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
-  `username` varchar(20) NOT NULL,
   `email` text NOT NULL,
   `password` varchar(20) NOT NULL,
   `role` varchar(20) NOT NULL,
@@ -15447,30 +15475,33 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `email`, `password`, `role`, `name`) VALUES
-(1, 'admin', 'admin@gmail.com', 'admin', 'superadmin', 'administrator'),
-(2, 'april', 'april@gmail.com', 'april', 'cpr', 'aprilia'),
-(3, 'ocha', 'ocha@gmail.com', 'ocha', 'legal', 'edinia ocha'),
-(4, 'mayang', 'mayang@gmail.com', 'mayang', 'client', 'mayang hermanda'),
-(5, 'gunawan', 'gunawan@gmail.com', 'gunawan', 'codev', 'gunawan suprapto'),
-(6, 'aprian', 'aprian@gmail.com', 'aprian', 'client', 'Aprian Yusuf'),
-(7, 'chika', 'chantika@gmail.com', 'chika', 'client', 'Chantika Aurrelia');
+INSERT INTO `user` (`user_id`, `email`, `password`, `role`, `name`) VALUES
+(1, 'admin@gmail.com', 'admin', 'superadmin', 'administrator'),
+(2, 'april@gmail.com', 'april', 'cpr', 'aprilia'),
+(3, 'ocha@gmail.com', 'ocha', 'legal', 'edinia ocha'),
+(4, 'mayang@gmail.com', 'mayang', 'client', 'mayang hermanda'),
+(5, 'gunawan@gmail.com', 'gunawan', 'codev', 'gunawan suprapto'),
+(6, 'aprian@gmail.com', 'aprian', 'client', 'Aprian Yusuf'),
+(7, 'chantika@gmail.com', 'chika', 'client', 'Chantika Aurrelia'),
+(13, 'laras@gmail.com', 'laras', 'client', 'nurul aulia larasati'),
+(14, 'doni@gmail.com', 'doni', 'client', 'dino suprapto'),
+(19, 'nadia@gmail.com', 'nadia', 'cpr', 'nadia setiadi');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `additional_info`
+--
+ALTER TABLE `additional_info`
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `article`
 --
 ALTER TABLE `article`
   ADD PRIMARY KEY (`article_id`);
-
---
--- Indexes for table `client_profile`
---
-ALTER TABLE `client_profile`
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `comment`
@@ -15555,17 +15586,17 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `client_profile`
+-- Constraints for table `additional_info`
 --
-ALTER TABLE `client_profile`
-  ADD CONSTRAINT `client_profile_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE;
+ALTER TABLE `additional_info`
+  ADD CONSTRAINT `additional_info_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `comment`
