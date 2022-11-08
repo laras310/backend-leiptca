@@ -229,6 +229,79 @@ def dictionary(language, alphabet):
   data = cursor.fetchall()
   return jsonify(data)
 
+@app.route('/add_dictionary', methods=['POST'])
+def add_dictionary():
+  if 'name' in session:
+    if session['role'] == "superadmin" or session['role'] == "codev":
+      language = request.json["language"]
+      word = request.json["word"]
+      meaning = request.json["meaning"]
+
+      # language = "english"
+      if language == "english":
+        cursor.execute('INSERT INTO dict_eng (word, meaning) VALUES (%s,%s)', (word, meaning))
+        mydb.commit()
+        return jsonify({"msg":"word added to english dictionary"})
+
+      # language = "indonesia"
+      elif language == "indonesia":
+        cursor.execute('INSERT INTO dict_ind (word, meaning) VALUES (%s,%s)', (word, meaning))
+        mydb.commit()
+        return jsonify({"msg":"word added to indonesia dictionary"})
+
+      # languange is not recognized
+      return jsonify({"msg":"languange not found"})
+
+    # unauthorized
+    return jsonify({"msg":"Has no access"})
+    
+  # not login
+  return jsonify({"msg":"Has not login"})
+
+@app.route('/del_dictionary/<language>/<dict_id>', methods=['POST'])
+def del_dictionary(language, dict_id):
+  if 'name' in session:
+    if session['role'] == "superadmin" or session['role'] == "codev":
+      if language == "english":
+        cursor.execute('DELETE FROM dict_eng WHERE dict_id = %s',([dict_id]))
+        mydb.commit()
+        return jsonify({"msg":"word deleted from english dictionary"})
+
+      elif language == "indonesia":
+        cursor.execute('DELETE FROM dict_ind WHERE dict_id = %s',([dict_id]))
+        mydb.commit()
+        return jsonify({"msg":"word deleted from indonesia dictionary"})
+
+      return jsonify({"msg":"languange not found"})
+
+    return jsonify({"msg":"Has no access"})
+    
+  return jsonify({"msg":"Has not login"})
+
+@app.route('/edit_dictionary/<language>/<dict_id>', methods=['POST'])
+def edit_dictionary(language, dict_id):
+  if 'name' in session:
+    if session['role'] == "superadmin" or session['role'] == "codev":
+      if language == "english":
+        word = request.json["word"]
+        meaning = request.json["meaning"]
+        cursor.execute('UPDATE dict_eng SET word = %s, meaning = %s WHERE dict_id = %s',(word,meaning,dict_id))
+        mydb.commit()
+        return jsonify({"msg":"word edited from english dictionary"})
+
+      elif language == "indonesia":
+        word = request.json["word"]
+        meaning = request.json["meaning"]
+        cursor.execute('UPDATE dict_ind SET word = %s, meaning = %s WHERE dict_id = %s',(word,meaning,dict_id))
+        mydb.commit()
+        return jsonify({"msg":"word edited from indonesia dictionary"})
+
+      return jsonify({"msg":"languange not found"})
+
+    return jsonify({"msg":"Has no access"})
+    
+  return jsonify({"msg":"Has not login"})
+
 @app.route('/user/<id>', methods=['GET'])
 def user(id):
   if 'role' in session:
