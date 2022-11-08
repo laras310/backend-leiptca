@@ -334,73 +334,79 @@ def del_user(id):
 
 @app.route('/edit_user/<id>', methods=['POST'])
 def edit_user(id):
-  msg=""
-  cursor.execute('SELECT * FROM user where user_id = %s',([id]))
-  user=cursor.fetchone()
-  if user :
-    if 'name' in request.json:
-      name = request.json["name"]
-      cursor.execute('UPDATE user SET name = %s WHERE user_id = %s',(name,id))
-      mydb.commit()
+  if 'role' in session:
+    if session['role'] == "superadmin":
+      msg=""
+      cursor.execute('SELECT * FROM user where user_id = %s',([id]))
+      user=cursor.fetchone()
+      if user :
+        if 'name' in request.json:
+          name = request.json["name"]
+          cursor.execute('UPDATE user SET name = %s WHERE user_id = %s',(name,id))
+          mydb.commit()
 
-    if 'email' in request.json:
-      email = request.json["email"]
-      cursor.execute('UPDATE user SET email = %s WHERE user_id = %s',(email,id))
-      mydb.commit()
+        if 'email' in request.json:
+          email = request.json["email"]
+          cursor.execute('UPDATE user SET email = %s WHERE user_id = %s',(email,id))
+          mydb.commit()
 
-    if 'password' in request.json:
-      password = request.json["password"]
-      cursor.execute('UPDATE user SET password = %s WHERE user_id = %s',(password,id))
-      mydb.commit()
+        if 'password' in request.json:
+          password = request.json["password"]
+          cursor.execute('UPDATE user SET password = %s WHERE user_id = %s',(password,id))
+          mydb.commit()
 
-    if 'role' in request.json:
-      role = request.json["role"]
-      cursor.execute('UPDATE user SET role = %s WHERE user_id = %s',(role,id))
-      mydb.commit()
-    
-    if 'phone_number' in request.json:
-      cursor.execute('SELECT * FROM additional_info where user_id = %s',([id]))
-      phone=cursor.fetchone()
-      if phone:
-        phone_number = request.json["phone_number"]
-        cursor.execute('UPDATE additional_info SET phone_number = %s WHERE user_id = %s',(phone_number,id))
-        mydb.commit()
-        msg="nomor diupdate"
-      else:
-        msg="nomor tidak ada"
-    
-    return jsonify(msg)
-      
-  # else:
-  return jsonify({"msg":"user tidak ditemukan"})
+        if 'role' in request.json:
+          role = request.json["role"]
+          cursor.execute('UPDATE user SET role = %s WHERE user_id = %s',(role,id))
+          mydb.commit()
+        
+        if 'phone_number' in request.json:
+          cursor.execute('SELECT * FROM additional_info where user_id = %s',([id]))
+          phone=cursor.fetchone()
+          if phone:
+            phone_number = request.json["phone_number"]
+            cursor.execute('UPDATE additional_info SET phone_number = %s WHERE user_id = %s',(phone_number,id))
+            mydb.commit()
+            msg="nomor diupdate"
+          else:
+            msg="nomor tidak ada"
+        
+        return jsonify(msg)
+      return jsonify({"msg":"user tidak ditemukan"})
+    return jsonify({"msg":"has no access"})
+  return jsonify({"msg":"has not logged in"})
 
 @app.route('/add_admin', methods=['POST'])
 def add_admin():
-  if request.method == 'POST' and 'name' in request.json and 'email' in request.json and 'password' in request.json and 'role' in request.json and 'phone_number' in request.json:
-    name = request.json["name"]
-    email = request.json["email"]
-    password = request.json["password"]
-    role = request.json["role"]
-    phone_number = request.json["phone_number"]
+  if 'role' in session:
+    if session['role'] == "superadmin":
+      if request.method == 'POST' and 'name' in request.json and 'email' in request.json and 'password' in request.json and 'role' in request.json and 'phone_number' in request.json:
+        name = request.json["name"]
+        email = request.json["email"]
+        password = request.json["password"]
+        role = request.json["role"]
+        phone_number = request.json["phone_number"]
 
-    cursor.execute('SELECT name FROM user where email = %s',([email]))
-    user = cursor.fetchone()
-  
-    if user:
-      return jsonify({"msg":"usernya udah ada"})
-    
-    else:
-      cursor.execute('INSERT INTO user (email, name, password, role) VALUES (%s,%s,%s,%s)', (email, name, password, role))
-      mydb.commit()
-      cursor.execute('SELECT user_id FROM user where email = %s',([email]))
-      user_id = cursor.fetchone()
-      print(user_id)
-      cursor.execute('INSERT INTO additional_info (phone_number, user_id) VALUES (%s,%s)', (phone_number,user_id[0]))
-      mydb.commit()
-      cursor.execute('SELECT * FROM user where email = %s',([email]))
-      new_user = cursor.fetchone()
-      return jsonify(new_user)
-  return jsonify({"msg":"salah method/gada form nama/email/pq"})
+        cursor.execute('SELECT name FROM user where email = %s',([email]))
+        user = cursor.fetchone()
+      
+        if user:
+          return jsonify({"msg":"usernya udah ada"})
+        
+        else:
+          cursor.execute('INSERT INTO user (email, name, password, role) VALUES (%s,%s,%s,%s)', (email, name, password, role))
+          mydb.commit()
+          cursor.execute('SELECT user_id FROM user where email = %s',([email]))
+          user_id = cursor.fetchone()
+          print(user_id)
+          cursor.execute('INSERT INTO additional_info (phone_number, user_id) VALUES (%s,%s)', (phone_number,user_id[0]))
+          mydb.commit()
+          cursor.execute('SELECT * FROM user where email = %s',([email]))
+          new_user = cursor.fetchone()
+          return jsonify(new_user)
+      return jsonify({"msg":"salah method/gada form nama/email/pq"})
+    return jsonify({"msg":"has no access"})
+  return jsonify({"msg":"has not logged in"})
 
 @app.route('/roles', methods=['GET'])
 def roles():
@@ -410,14 +416,21 @@ def roles():
 
 @app.route('/orders/<id>', methods=['GET'])
 def orders(id):
-  if not id=="all":
-    cursor.execute('SELECT * FROM ordered where order_id = %s',([id]))
-    order = cursor.fetchone()
-    return jsonify(order)
-  else:
-    cursor.execute('SELECT * FROM ordered ORDER BY order_date DESC')
-    orders = cursor.fetchall()
-    return jsonify(orders)
+  if 'role' in session:
+    if not id=="all":
+      cursor.execute('SELECT * FROM ordered where order_id = %s',([id]))
+      order = cursor.fetchone()
+      if session['user_id'] == order['user_id'] or session['role'] == "superadmin" or session['role']=="cpr" or session['role']=="codev":
+        return jsonify(order)
+      else:
+        return jsonify({"msg":"has no access"})
+    elif id=="all":
+      if session['role'] != "client":
+        cursor.execute('SELECT * FROM ordered ORDER BY order_date DESC')
+        orders = cursor.fetchall()
+        return jsonify(orders)
+      else:
+        return jsonify({"msg":"has no access"})
 
 @app.route('/progress/<id>', methods=['GET'])
 def progress(id):
@@ -439,35 +452,74 @@ def services_list(service_type):
 @app.route('/add_service/<service_type>', methods=['POST'])
 def add_service(service_type):
   if service_type == "legal":
-    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json:
+    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json and 'matter' in request.json:
       type = request.json["type"]
       cost = request.json["cost"]
-      cursor.execute('INSERT INTO legal_list (type, cost) VALUES (%s,%s)', (type, cost))
+      matter = request.json["matter"]
+      cursor.execute('INSERT INTO legal_list (type, matter, cost) VALUES (%s,%s,%s)', (type, matter, cost))
       mydb.commit()
       cursor.execute('SELECT * FROM legal_list where type = %s',([type]))
       new_service = cursor.fetchone()
       return jsonify(new_service)
   elif service_type == "translate":
-    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json:
-      type = request.json["type"]
+    if request.method == 'POST' and 'trans_type' in request.json and 'cost' in request.json and 'lang_from' in request.json and 'lang_to' in request.json:
+      trans_type = request.json["trans_type"]
       cost = request.json["cost"]
-      cursor.execute('INSERT INTO translate_list (type, cost) VALUES (%s,%s)', (type, cost))
+      lang_to = request.json["lang_to"]
+      lang_from = request.json["lang_from"]
+      cursor.execute('INSERT INTO translate_list (lang_from, lang_to, trans_type, cost) VALUES (%s,%s,%s,%s)', (lang_from, lang_to, trans_type, cost))
       mydb.commit()
       cursor.execute('SELECT * FROM translate_list where type = %s',([type]))
       new_service = cursor.fetchone()
       return jsonify(new_service)
   elif service_type == "training":
-    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json and 'date' in request.json:
-      type = request.json["type"]
-      cost = request.json["cost"]
-      date = request.json["date"]
-      cursor.execute('INSERT INTO training_list (type, cost, date) VALUES (%s,%s,%s)', (type, cost, date))
+    if request.method == 'POST' and 'training_class' in request.json and 'date_time' in request.json and 'quota' in request.json:
+      training_class = request.json["training_class"]
+      date_time = request.json["date_time"]
+      quota = request.json["quota"]
+      cursor.execute('INSERT INTO training_list (training_class, date_time, quota) VALUES (%s,%s,%s)', (training_class, date_time, quota))
       mydb.commit()
-      cursor.execute('SELECT * FROM training_list where type = %s',([type]))
+      cursor.execute('SELECT * FROM training_list where training_class = %s',([training_class]))
       new_service = cursor.fetchone()
       return jsonify(new_service)
   return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
+@app.route('/edit_service/<service_type>/<service_id>', methods=['POST'])
+def edit_service(service_type, service_id):
+  if service_type == "legal":
+    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json and 'matter' in request.json:
+      type = request.json["type"]
+      cost = request.json["cost"]
+      matter = request.json["matter"]
+      cursor.execute('UPDATE legal_list SET type=%s, matter = %s, cost = %s WHERE service_id = %s', (type, matter, cost, service_id))
+      mydb.commit()
+      cursor.execute('SELECT * FROM legal_list where type = %s',([type]))
+      new_service = cursor.fetchone()
+      return jsonify(new_service)
+
+  elif service_type == "translate":
+    if request.method == 'POST' and 'trans_type' in request.json and 'cost' in request.json and 'lang_from' in request.json and 'lang_to' in request.json:
+      trans_type = request.json["trans_type"]
+      cost = request.json["cost"]
+      lang_to = request.json["lang_to"]
+      lang_from = request.json["lang_from"]
+      cursor.execute('UPDATE translate_list lang_from = %s, lang_to = %s, trans_type = %s, cost = %s WHERE service_id = %s', (lang_from, lang_to, trans_type, cost, service_id))
+      mydb.commit()
+      cursor.execute('SELECT * FROM translate_list where type = %s',([type]))
+      new_service = cursor.fetchone()
+      return jsonify(new_service)
+
+  elif service_type == "training":
+    if request.method == 'POST' and 'training_class' in request.json and 'date_time' in request.json and 'quota' in request.json:
+      training_class = request.json["training_class"]
+      date_time = request.json["date_time"]
+      quota = request.json["quota"]
+      cursor.execute('INSERT INTO training_list (training_class, date_time, quota) VALUES (%s,%s,%s)', (training_class, date_time, quota))
+      mydb.commit()
+      cursor.execute('SELECT * FROM training_list where training_class = %s',([training_class]))
+      new_service = cursor.fetchone()
+      return jsonify(new_service)
+  return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
 @app.route('/legal_order', methods=['POST'])
 def legal_order():
@@ -497,6 +549,66 @@ def legal_order():
 
       return jsonify(order_id)
     return jsonify({"msg":"salah method/gada form nama/email/pq"})
+  return jsonify({"msg":"not logged in"})
+
+@app.route('/translate_order', methods=['POST'])
+def translate_order():
+  # if 'role' in session:
+  #   if 'legal_service_id' in request.json:
+  #     legal_service_id = request.json["legal_service_id"]
+  #     date = datetime.datetime.now().date()
+  #     user_id = session['user_id']
+        
+  #     cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "LE%" ORDER BY order_id DESC')
+  #     order = cursor.fetchone()
+  #     if order:
+  #       order_id = "LE0000"+str(int(order['order_id'][2:])+1)
+  #     else:
+  #       order_id = "LE0000"+"1"
+      
+  #     cursor.execute('SELECT cost FROM legal_list WHERE service_id = %s',([legal_service_id]))
+  #     cost = cursor.fetchone()
+
+  #     if 'voucher' in request.json:
+  #       voucher = request.json["voucher"]
+  #       cursor.execute('INSERT INTO legal_order (order_id, voucher) VALUES (%s,%s)', (order_id,voucher))
+  #       mydb.commit()
+
+  #     cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "legal")', (order_id, legal_service_id, user_id, date, cost['cost']))
+  #     mydb.commit()
+
+  #     return jsonify(order_id)
+  #   return jsonify({"msg":"salah method/gada form nama/email/pq"})
+  return jsonify({"msg":"not logged in"})
+
+@app.route('/training_order', methods=['POST'])
+def training_order():
+  # if 'role' in session:
+  #   if 'legal_service_id' in request.json:
+  #     legal_service_id = request.json["legal_service_id"]
+  #     date = datetime.datetime.now().date()
+  #     user_id = session['user_id']
+        
+  #     cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "LE%" ORDER BY order_id DESC')
+  #     order = cursor.fetchone()
+  #     if order:
+  #       order_id = "LE0000"+str(int(order['order_id'][2:])+1)
+  #     else:
+  #       order_id = "LE0000"+"1"
+      
+  #     cursor.execute('SELECT cost FROM legal_list WHERE service_id = %s',([legal_service_id]))
+  #     cost = cursor.fetchone()
+
+  #     if 'voucher' in request.json:
+  #       voucher = request.json["voucher"]
+  #       cursor.execute('INSERT INTO legal_order (order_id, voucher) VALUES (%s,%s)', (order_id,voucher))
+  #       mydb.commit()
+
+  #     cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "legal")', (order_id, legal_service_id, user_id, date, cost['cost']))
+  #     mydb.commit()
+
+  #     return jsonify(order_id)
+  #   return jsonify({"msg":"salah method/gada form nama/email/pq"})
   return jsonify({"msg":"not logged in"})
 
 if __name__ == '__main__':
