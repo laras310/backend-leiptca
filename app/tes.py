@@ -425,7 +425,7 @@ def progress(id):
   progress = cursor.fetchall()
   return jsonify(progress)
 
-@app.route('/services_list/<service_type>', methods=['GET'])
+@app.route('/services/<service_type>', methods=['GET'])
 def services_list(service_type):
   if service_type == "legal":
     cursor.execute('SELECT * FROM legal_list ORDER BY type ASC')
@@ -435,6 +435,38 @@ def services_list(service_type):
     cursor.execute('SELECT * FROM training_list ORDER BY date DESC')
   services = cursor.fetchall()
   return jsonify(services)
+
+@app.route('/add_service/<service_type>', methods=['POST'])
+def add_service(service_type):
+  if service_type == "legal":
+    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json:
+      type = request.json["type"]
+      cost = request.json["cost"]
+      cursor.execute('INSERT INTO legal_list (type, cost) VALUES (%s,%s)', (type, cost))
+      mydb.commit()
+      cursor.execute('SELECT * FROM legal_list where type = %s',([type]))
+      new_service = cursor.fetchone()
+      return jsonify(new_service)
+  elif service_type == "translate":
+    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json:
+      type = request.json["type"]
+      cost = request.json["cost"]
+      cursor.execute('INSERT INTO translate_list (type, cost) VALUES (%s,%s)', (type, cost))
+      mydb.commit()
+      cursor.execute('SELECT * FROM translate_list where type = %s',([type]))
+      new_service = cursor.fetchone()
+      return jsonify(new_service)
+  elif service_type == "training":
+    if request.method == 'POST' and 'type' in request.json and 'cost' in request.json and 'date' in request.json:
+      type = request.json["type"]
+      cost = request.json["cost"]
+      date = request.json["date"]
+      cursor.execute('INSERT INTO training_list (type, cost, date) VALUES (%s,%s,%s)', (type, cost, date))
+      mydb.commit()
+      cursor.execute('SELECT * FROM training_list where type = %s',([type]))
+      new_service = cursor.fetchone()
+      return jsonify(new_service)
+  return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
 
 @app.route('/legal_order', methods=['POST'])
