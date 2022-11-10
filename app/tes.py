@@ -68,7 +68,7 @@ def login():
     return jsonify({'error': 'Invalid parameter'})
   
   # jika sudah login
-  return jsonify({'error': 'Already logged in'})
+  return redirect(url_for('current_user'))
 
 @app.route('/signup', methods=['POST'])
 @app.route('/signup/', methods=['POST'])
@@ -454,13 +454,13 @@ def del_progress(id):
 
 @app.route('/add_progress/<id>', methods=['POST'])
 def add_progress(id):
-  if title in request.json and description in request.json and state in request.json:
+  if 'title' in request.json and 'description' in request.json and 'state' in request.json:
     title = request.json["title"]
     description = request.json["description"]
     state = request.json["state"]
     doc = request.json["doc"]
 
-    cursor.execute('INSERT INTO progress (order_id, progress_title, progress_doc, state, progress_desc) VALUES (%s,%s,%s,%s,%s)', (id, title,doc, state, description ))
+    cursor.execute('INSERT INTO progress (order_id, progress_doc, state, progress_desc) VALUES (%s,%s,%s,%s)', (id,doc, state, description ))
   else:
     return jsonify({"msg":"invalid parameters"})
   return jsonify({"msg":"user terhapus"})
