@@ -18,6 +18,7 @@ cursor = mydb.cursor(dictionary=True,buffered=True)
 app.secret_key="abcd"
 
 @app.route('/current_user', methods=['GET'])
+@app.route('/current_user/', methods=['GET'])
 def current_user():
     if 'name' in session:
       return jsonify({
@@ -30,6 +31,7 @@ def current_user():
         return jsonify({'error': 'Not logged in'})
 
 @app.route('/admin_list', methods=['GET'])
+@app.route('/admin_list/', methods=['GET'])
 def admin_list():
   if 'name' in session:
     if not session['role'] == "client":
@@ -40,6 +42,7 @@ def admin_list():
   return jsonify({"msg":"Has not login"})
 
 @app.route('/login', methods=['POST'])
+@app.route('/login/', methods=['POST'])
 def login():
   if not 'loggedin' in session:
     if 'email' in request.json and 'password' in request.json:
@@ -68,6 +71,7 @@ def login():
   return jsonify({'error': 'Already logged in'})
 
 @app.route('/signup', methods=['POST'])
+@app.route('/signup/', methods=['POST'])
 def signup():
   if request.method == 'POST' and 'name' in request.json and 'email' in request.json and 'password' in request.json:
     name = request.json["name"]
@@ -89,6 +93,7 @@ def signup():
   return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
 @app.route('/logout', methods=['POST'])
+@app.route('/logout/', methods=['POST'])
 def logout():
     # menghapus semua data session
   session.clear()
@@ -230,6 +235,7 @@ def dictionary(language, alphabet):
   return jsonify(data)
 
 @app.route('/add_dictionary', methods=['POST'])
+@app.route('/add_dictionary/', methods=['POST'])
 def add_dictionary():
   if 'name' in session:
     if session['role'] == "superadmin" or session['role'] == "codev":
@@ -409,6 +415,7 @@ def add_admin():
   return jsonify({"msg":"has not logged in"})
 
 @app.route('/roles', methods=['GET'])
+@app.route('/roles/', methods=['GET'])
 def roles():
   cursor.execute('SELECT * FROM roles')
   roles = cursor.fetchall()
@@ -438,16 +445,24 @@ def progress(id):
   progress = cursor.fetchall()
   return jsonify(progress)
 
-@app.route('/del_progress/<id>', methods=['GET'])
+@app.route('/del_progress/<id>', methods=['POST'])
 def del_progress(id):
   if 'role' in session:
     cursor.execute('DELETE FROM progress WHERE order_id = %s',([id]))
     return jsonify({"msg":"user terhapus"})
   return jsonify({"msg":"has not logged in"})
 
-@app.route('/add_progress/<id>', methods=['GET'])
+@app.route('/add_progress/<id>', methods=['POST'])
 def add_progress(id):
-  cursor.execute('DELETE FROM progress WHERE order_id = %s',([id]))
+  if title in request.json and description in request.json and state in request.json:
+    title = request.json["title"]
+    description = request.json["description"]
+    state = request.json["state"]
+    doc = request.json["doc"]
+
+    cursor.execute('INSERT INTO progress (order_id, progress_title, progress_doc, state, progress_desc) VALUES (%s,%s,%s,%s,%s)', (id, title,doc, state, description ))
+  else:
+    return jsonify({"msg":"invalid parameters"})
   return jsonify({"msg":"user terhapus"})
 
 @app.route('/services/<service_type>', methods=['GET'])
