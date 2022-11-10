@@ -602,11 +602,13 @@ def translate_order():
         date = datetime.datetime.now().date()
         user_id = session['user_id']
 
-        #menentukan service id
-        cursor.execute('SELECT service_id FROM translate_id WHERE lang_from = %s AND lang_to = %s',(lang_from, lang_to))
-        translate_service_id = cursor.fetchone()
+        # print(lang_to)
 
-        #menentukan order id
+        #menentukan service id
+        cursor.execute('SELECT service_id FROM translate_list WHERE lang_from = %s AND lang_to = %s',(lang_from, lang_to))
+        translate_service_id = cursor.fetchone() #dict
+
+        # #menentukan order id
         cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TR%" ORDER BY order_id DESC')
         order = cursor.fetchone()
         if order:
@@ -615,22 +617,26 @@ def translate_order():
           order_id = "TR"+order_num
         else:
           order_id = "TR0000"+"1"
-        
-        #ambil atribut cost
-        cursor.execute('SELECT regular_cost FROM translate_list WHERE service_id = %s',([translate_service_id]))
+
+        print(translate_service_id['service_id'])
+
+        # #ambil atribut cost
+        cursor.execute('SELECT * FROM translate_list WHERE service_id = "%s"',(translate_service_id['service_id']))
         cost = cursor.fetchone()
-        if order_type == "express":
-          cost = cost*2
+        # if order_type == "express":
+        #   cost = cost*2
+        
+        print(cost['regular_cost'])
 
-        #simpan ke tabel ordered
-        cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id, user_id, date, cost['cost']))
-        mydb.commit()
+        # #simpan ke tabel ordered
+        # cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id, user_id, date, cost['cost']))
+        # mydb.commit()
 
-        #simpan delivery ke translate order
-        cursor.execute('INSERT INTO translate_order (order_id, delivery, num_of_pages) VALUES (%s,%s,%s)', (order_id,delivery,num_of_pages))
-        mydb.commit()
+        # #simpan delivery ke translate order
+        # cursor.execute('INSERT INTO translate_order (order_id, delivery, num_of_pages) VALUES (%s,%s,%s)', (order_id,delivery,num_of_pages))
+        # mydb.commit()
 
-        return jsonify(order_id)
+        # return jsonify(order_id)
       return jsonify({"msg":"salah method/gada form nama/email/pq"})
     return jsonify({"msg":"Has no access"})
   return jsonify({"msg":"not logged in"})
