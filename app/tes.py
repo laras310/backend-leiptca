@@ -605,7 +605,7 @@ def translate_order():
         cursor.execute('SELECT regular_cost FROM translate_list WHERE service_id = %s',([translate_service_id]))
         cost = cursor.fetchone()
         if order_type == "express":
-          cost = cost+(cost*0.1)
+          cost = cost*2
 
         #simpan ke tabel ordered
         cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id, user_id, date, cost['cost']))
