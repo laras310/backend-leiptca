@@ -540,8 +540,10 @@ def legal_order():
   if 'role' in session:
     if 'legal_service_id' in request.json:
       legal_service_id = request.json["legal_service_id"]
+      delivery = request.json["delivery"]
       date = datetime.datetime.now().date()
       user_id = session['user_id']
+      voucher = request.json["voucher"]
         
       cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "LE%" ORDER BY order_id DESC')
       order = cursor.fetchone()
@@ -552,14 +554,19 @@ def legal_order():
       
       cursor.execute('SELECT cost FROM legal_list WHERE service_id = %s',([legal_service_id]))
       cost = cursor.fetchone()
-
-      if 'voucher' in request.json:
-        voucher = request.json["voucher"]
-        cursor.execute('INSERT INTO legal_order (order_id, voucher) VALUES (%s,%s)', (order_id,voucher))
-        mydb.commit()
-
+      
+      #input orderan ke ordered
       cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "legal")', (order_id, legal_service_id, user_id, date, cost['cost']))
       mydb.commit()
+
+      #input delivery dan voucher type to legal_order
+      cursor.execute('INSERT INTO legal_order (order_id, delivery, voucher) VALUES (%s,%s,%s)', (order_id,delivery,voucher))
+
+      #input voucher kalau ada
+      # if 'voucher' in request.json:
+      #   voucher = request.json["voucher"]
+      #   cursor.execute('UPDATE legal_order SET voucher = %s WHERE order_id = %s', (order_id,voucher))
+      #   mydb.commit()
 
       return jsonify(order_id)
     return jsonify({"msg":"salah method/gada form nama/email/pq"})
@@ -568,64 +575,92 @@ def legal_order():
 @app.route('/translate_order', methods=['POST'])
 def translate_order():
   if 'role' in session:
-    if 'translate_service_id' in request.json:
-      translate_service_id = request.json["translate_service_id"]
-      date = datetime.datetime.now().date()
-      delivery = request.json["delivery"]
-      user_id = session['user_id']
+    if session['role']=="client":
+      # if 'translate_service_id' in request.json:
+      if 'lang_from' in request.json and 'lang_to' in request.json and 'num_of_pages' in request.json:
+        lang_from = request.json["lang_from"]
+        lang_to = request.json["lang_to"]
+        # translate_service_id = request.json["translate_service_id"]
+        num_of_pages = request.json["num_of_pages"]
+        order_type = request.json["order_type"]
+        delivery = request.json["delivery"]
+        date = datetime.datetime.now().date()
+        user_id = session['user_id']
+
+        #menentukan service id
+        cursor.execute('SELECT service_id FROM translate_id WHERE lang_from = %s AND lang_to = %s',(lang_from, lang_to))
+        translate_service_id = cursor.fetchone()
+
+        #menentukan order id
+        cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TR%" ORDER BY order_id DESC')
+        order = cursor.fetchone()
+        if order:
+          order_num = str(int(order['order_id'][2:])+1)
+          order_num = ((4-len(order_num))*"0")+order_num
+          order_id = "TR"+order_num
+        else:
+          order_id = "TR0000"+"1"
         
-      #menentukan order id
-      cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TR%" ORDER BY order_id DESC')
-      order = cursor.fetchone()
-      if order:
-        order_id = "TR0000"+str(int(order['order_id'][2:])+1)
-      else:
-        order_id = "TR0000"+"1"
-      
-      #ambil atribut cost
-      cursor.execute('SELECT cost FROM translate_list WHERE service_id = %s',([translate_service_id]))
-      cost = cursor.fetchone()
+        #ambil atribut cost
+        cursor.execute('SELECT regular_cost FROM translate_list WHERE service_id = %s',([translate_service_id]))
+        cost = cursor.fetchone()
+        if order_type == "express":
+          cost = cost+(cost*0.1)
 
-      #simpan ke tabel ordered
-      cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id, user_id, date, cost['cost']))
-      mydb.commit()
+        #simpan ke tabel ordered
+        cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id, user_id, date, cost['cost']))
+        mydb.commit()
 
-      #simpan delivery ke translate order
-      cursor.execute('INSERT INTO translate_order (order_id, delivery) VALUES (%s,%s)', (order_id,delivery))
-      mydb.commit()
+        #simpan delivery ke translate order
+        cursor.execute('INSERT INTO translate_order (order_id, delivery, num_of_pages) VALUES (%s,%s,%s)', (order_id,delivery,num_of_pages))
+        mydb.commit()
 
-      return jsonify(order_id)
-    return jsonify({"msg":"salah method/gada form nama/email/pq"})
+        return jsonify(order_id)
+      return jsonify({"msg":"salah method/gada form nama/email/pq"})
+    return jsonify({"msg":"Has no access"})
   return jsonify({"msg":"not logged in"})
 
 @app.route('/training_order', methods=['POST'])
-def training_order():
+def add_training_order():
   if 'role' in session:
-    if 'training_service_id' in request.json:
-      training_service_id = request.json["training_service_id"]
-      date = datetime.datetime.now().date()
-      user_id = session['user_id']
+    if session['role'] == "client":
+      if 'training_service_id' in request.json:
+        #get quota
+        training_service_id = request.json["training_service_id"]
+        cursor.execute('SELECT quota from training_list WHERE service_id = %s',([training_service_id]))
+        quota = cursor.fetchone()
+
+        #track jumlah order
+        cursor.execute('SELECT COUNT(order_id) FROM ordered WHERE order_service_id = %s;',([training_service_id]))
+        totalApplicant = cursor.fetchone()
+        print(totalApplicant)
+
+        if totalApplicant['COUNT(order_id)'] < quota['quota']:
+          date = datetime.datetime.now().date()
+          user_id = session['user_id']
+          #menentukan order id
+          cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TN%" ORDER BY order_id DESC')
+          order = cursor.fetchone()
+          if order:
+            order_num = str(int(order['order_id'][2:])+1)
+            order_num = ((4-len(order_num))*"0")+order_num
+            order_id = "TN"+order_num
+          else:
+            order_id = "TN0001"
         
-      #menentukan order id
-      cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TN%" ORDER BY order_id DESC')
-      order = cursor.fetchone()
-      if order:
-        order_id = "TN0000"+str(int(order['order_id'][2:])+1)
-      else:
-        order_id = "TN0000"+"1"
-      
-      #cari biaya
-      cursor.execute('SELECT cost FROM training_list WHERE service_id = %s',([training_service_id]))
-      cost = cursor.fetchone()
+          #cari biaya
+          cursor.execute('SELECT cost FROM training_list WHERE service_id = %s',([training_service_id]))
+          cost = cursor.fetchone()
 
-      #input order
-      cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "training")', (order_id, training_service_id, user_id, date, cost['cost']))
-      mydb.commit()
+          #input order
+          cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "training")', (order_id, training_service_id, user_id, date, cost['cost']))
+          mydb.commit()
 
-      #track jumlah applicant
-
-      return jsonify(order_id)
-    return jsonify({"msg":"salah method/gada form nama/email/pq"})
+          return jsonify(order_id)
+        else:
+          return jsonify({"msg":"quota penuh"})
+      return jsonify({"msg":"salah method/gada form nama/email/pq"})
+    return jsonify({"msg":"Has no access"})
   return jsonify({"msg":"not logged in"})
 
 if __name__ == '__main__':

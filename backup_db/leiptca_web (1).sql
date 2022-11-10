@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 08, 2022 at 09:16 AM
+-- Generation Time: Nov 10, 2022 at 03:59 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -88,6 +88,24 @@ CREATE TABLE `comment` (
 INSERT INTO `comment` (`comment_id`, `user_id`, `article_id`, `comment_text`, `comment_date`) VALUES
 ('com3', 1, 'ar2', 'artikelnya sangat bagus', '2022-10-28'),
 ('com4', 13, 'ar4', 'Hukum seberat-beratnya jangan kasih ampun!', '2022-11-08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company_profile`
+--
+
+CREATE TABLE `company_profile` (
+  `comp_id` int(11) DEFAULT NULL,
+  `description` text NOT NULL,
+  `street` text NOT NULL,
+  `province` text NOT NULL,
+  `city` text NOT NULL,
+  `link_1` text NOT NULL,
+  `link_2` text NOT NULL,
+  `link_3` text NOT NULL,
+  `link_4` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -15293,15 +15311,16 @@ INSERT INTO `legal_list` (`service_id`, `type`, `matter`, `cost`) VALUES
 CREATE TABLE `legal_order` (
   `order_id` varchar(20) NOT NULL,
   `voucher` text NOT NULL,
-  `order_docs` text NOT NULL
+  `order_docs` text NOT NULL,
+  `delivery` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `legal_order`
 --
 
-INSERT INTO `legal_order` (`order_id`, `voucher`, `order_docs`) VALUES
-('LE00001', '', 'data.pdf');
+INSERT INTO `legal_order` (`order_id`, `voucher`, `order_docs`, `delivery`) VALUES
+('LE00001', '', 'data.pdf', '');
 
 -- --------------------------------------------------------
 
@@ -15323,9 +15342,11 @@ CREATE TABLE `ordered` (
 --
 
 INSERT INTO `ordered` (`order_id`, `order_service_id`, `user_id`, `order_date`, `order_cost`, `order_desc`) VALUES
-('LE00001', 'le8', 4, '2022-10-24', 180000, 'Legal'),
-('TN00001', 'tn1', 4, '2022-10-18', 50000, 'Training'),
-('TR00001', 'tr1', 4, '2022-10-24', 350000, 'translate');
+('TN0001', 'tn1', 1, '2022-11-09', 0, 'training'),
+('TN0002', 'tn1', 1, '2022-11-09', 0, 'training'),
+('TN0003', 'tn1', 1, '2022-11-09', 0, 'training'),
+('TN0004', 'tn1', 1, '2022-11-09', 0, 'training'),
+('TN0005', 'tn1', 1, '2022-11-09', 0, 'training');
 
 -- --------------------------------------------------------
 
@@ -15381,16 +15402,17 @@ CREATE TABLE `training_list` (
   `service_id` varchar(20) NOT NULL,
   `training_class` text NOT NULL,
   `date_time` datetime NOT NULL,
-  `quota` int(20) NOT NULL
+  `quota` int(20) NOT NULL,
+  `cost` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `training_list`
 --
 
-INSERT INTO `training_list` (`service_id`, `training_class`, `date_time`, `quota`) VALUES
-('tn1', 'IP Class', '2022-10-20 08:00:00', 50),
-('tn2', 'Webinar Pemilihan Badan Usaha dan Badan Hukum dalam Memulai Bisnis', '2022-11-16 08:00:00', 100);
+INSERT INTO `training_list` (`service_id`, `training_class`, `date_time`, `quota`, `cost`) VALUES
+('tn1', 'IP Class', '2022-10-20 08:00:00', 5, 0),
+('tn2', 'Webinar Pemilihan Badan Usaha dan Badan Hukum dalam Memulai Bisnis', '2022-11-16 08:00:00', 100, 0);
 
 -- --------------------------------------------------------
 
@@ -15402,7 +15424,7 @@ CREATE TABLE `translate_list` (
   `service_id` varchar(20) NOT NULL,
   `lang_from` varchar(20) NOT NULL,
   `lang_to` varchar(20) NOT NULL,
-  `cost` int(100) NOT NULL,
+  `regular_cost` int(100) NOT NULL,
   `trans_type` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -15410,7 +15432,7 @@ CREATE TABLE `translate_list` (
 -- Dumping data for table `translate_list`
 --
 
-INSERT INTO `translate_list` (`service_id`, `lang_from`, `lang_to`, `cost`, `trans_type`) VALUES
+INSERT INTO `translate_list` (`service_id`, `lang_from`, `lang_to`, `regular_cost`, `trans_type`) VALUES
 ('tr1', 'English', 'Bahasa Indonesia', 35000, 'Translate Only'),
 ('tr10', 'Dutch', 'Bahasa Indonesia', 400000, 'Translate + Sworn'),
 ('tr11', 'Bahasa Indonesia', 'Dutch', 400000, 'Translate + Sworn'),
@@ -15447,15 +15469,16 @@ CREATE TABLE `translate_order` (
   `order_id` varchar(20) NOT NULL,
   `order_type` text NOT NULL,
   `delivery` text NOT NULL,
-  `order_docs` text NOT NULL
+  `order_docs` text NOT NULL,
+  `num_of_pages` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `translate_order`
 --
 
-INSERT INTO `translate_order` (`order_id`, `order_type`, `delivery`, `order_docs`) VALUES
-('TR00001', 'translate', 'JNE', 'data.pdf');
+INSERT INTO `translate_order` (`order_id`, `order_type`, `delivery`, `order_docs`, `num_of_pages`) VALUES
+('TR00001', 'translate', 'JNE', 'data.pdf', 0);
 
 -- --------------------------------------------------------
 
@@ -15581,6 +15604,18 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `dict_eng`
+--
+ALTER TABLE `dict_eng`
+  MODIFY `dict_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13268;
+
+--
+-- AUTO_INCREMENT for table `dict_ind`
+--
+ALTER TABLE `dict_ind`
+  MODIFY `dict_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1762;
 
 --
 -- AUTO_INCREMENT for table `user`
