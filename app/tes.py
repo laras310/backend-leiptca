@@ -621,8 +621,12 @@ def translate_order():
         print(translate_service_id['service_id'])
 
         # #ambil atribut cost
-        cursor.execute('SELECT * FROM translate_list WHERE service_id = "%s"',(translate_service_id['service_id']))
+        cursor.execute('SELECT regular_cost FROM translate_list WHERE service_id = %s',([translate_service_id['service_id']]))
         cost = cursor.fetchone()
+
+
+        # cursor.execute('SELECT * FROM translate_list WHERE service_id = "%s"',(translate_service_id['service_id']))
+        # cost = cursor.fetchone()
         # if order_type == "express":
         #   cost = cost*2
         
