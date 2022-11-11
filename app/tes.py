@@ -443,17 +443,18 @@ def orders(id):
       else:
         return jsonify({"msg":"has no access"})
 
-@app.route('/progress/<id>', methods=['GET'])
-def progress(id):
-  cursor.execute('SELECT * FROM progress WHERE order_id = %s ORDER BY progress_num ASC',([id]))
+@app.route('/progress/<order_id>', methods=['GET'])
+def progress(order_id):
+  cursor.execute('SELECT * FROM progress WHERE order_id = %s ORDER BY progress_num ASC',([order_id]))
   progress = cursor.fetchall()
   return jsonify(progress)
 
-@app.route('/del_progress/<id>', methods=['POST'])
-def del_progress(id):
+@app.route('/del_progress/<progress_id>', methods=['POST'])
+def del_progress(progress_id):
   if 'role' in session:
-    cursor.execute('DELETE FROM progress WHERE order_id = %s',([id]))
-    return jsonify({"msg":"user terhapus"})
+    cursor.execute('DELETE FROM progress WHERE progress_id = %s',([progress_id]))
+    mydb.commit()
+    return jsonify({"msg":"progress terhapus"})
   return jsonify({"msg":"has not logged in"})
 
 @app.route('/add_progress/<id>', methods=['POST'])
@@ -464,7 +465,7 @@ def add_progress(id):
     state = request.json["state"]
     doc = request.json["doc"]
 
-    cursor.execute('INSERT INTO progress (order_id, progress_doc, state, progress_desc) VALUES (%s,%s,%s,%s)', (id,doc, state, description ))
+    cursor.execute('INSERT INTO progress (order_id,progress_title, progress_doc, state, progress_desc) VALUES (%s,%s,%s,%s,%s)', (id,title,doc, state, description ))
   else:
     return jsonify({"msg":"invalid parameters"})
   return jsonify({"msg":"user terhapus"})
@@ -487,31 +488,57 @@ def add_service(service_type):
       type = request.json["type"]
       cost = request.json["cost"]
       matter = request.json["matter"]
-      cursor.execute('INSERT INTO legal_list (type, matter, cost) VALUES (%s,%s,%s)', (type, matter, cost))
+
+      #cari service_id
+      cursor.execute('SELECT MAX(CAST(SUBSTRING(service_id FROM 3) AS UNSIGNED)) AS "service_id" from legal_list WHERE service_id LIKE "le%";')
+      service = cursor.fetchone()
+      if service:
+        service_id = "le"+str(service['service_id']+1)
+      else:
+        service_id = "le"+"1"
+      cursor.execute('INSERT INTO legal_list (service_id,type, matter, cost) VALUES (%s,%s,%s,%s)', (service_id, type, matter, cost))
       mydb.commit()
-      cursor.execute('SELECT * FROM legal_list where type = %s',([type]))
+      cursor.execute('SELECT * FROM legal_list where service_id = %s',([service_id]))
       new_service = cursor.fetchone()
       return jsonify(new_service)
+
   elif service_type == "translate":
     if request.method == 'POST' and 'trans_type' in request.json and 'cost' in request.json and 'lang_from' in request.json and 'lang_to' in request.json:
       trans_type = request.json["trans_type"]
       cost = request.json["cost"]
       lang_to = request.json["lang_to"]
       lang_from = request.json["lang_from"]
-      cursor.execute('INSERT INTO translate_list (lang_from, lang_to, trans_type, cost) VALUES (%s,%s,%s,%s)', (lang_from, lang_to, trans_type, cost))
+
+      #cari service_id
+      cursor.execute('SELECT MAX(CAST(SUBSTRING(service_id FROM 3) AS UNSIGNED)) AS "service_id" from translate_list WHERE service_id LIKE "tr%";')
+      service = cursor.fetchone()
+      if service:
+        service_id = "tr"+str(service['service_id']+1)
+      else:
+        service_id = "tr"+"1"
+
+      cursor.execute('INSERT INTO translate_list (service_id, lang_from, lang_to, trans_type, cost) VALUES (%s,%s,%s,%s,%s)', (service_id,lang_from, lang_to, trans_type, cost))
       mydb.commit()
-      cursor.execute('SELECT * FROM translate_list where type = %s',([type]))
+      cursor.execute('SELECT * FROM translate_list where service_id = %s',([service_id]))
       new_service = cursor.fetchone()
       return jsonify(new_service)
   elif service_type == "training":
-    if request.method == 'POST' and 'training_class' in request.json and 'date_time' in request.json and 'quota' in request.json:
+    if request.method == 'POST' and 'training_class' in request.json and 'date_time' in request.json and 'quota' in request.json and 'cost' in request.json:
       training_class = request.json["training_class"]
       date_time = request.json["date_time"]
       quota = request.json["quota"]
       cost = request.json["cost"]
-      cursor.execute('INSERT INTO training_list (training_class, date_time, quota, cost) VALUES (%s,%s,%s,%s)', (training_class, date_time, quota,cost))
+
+      #cari service_id
+      cursor.execute('SELECT MAX(CAST(SUBSTRING(service_id FROM 3) AS UNSIGNED)) AS "service_id" from training_list WHERE service_id LIKE "tn%";')
+      service = cursor.fetchone()
+      if service:
+        service_id = "tn"+str(service['service_id']+1)
+      else:
+        service_id = "tn"+"1"
+      cursor.execute('INSERT INTO training_list (service_id,training_class, date_time, quota, cost) VALUES (%s,%s,%s,%s,%s)', (service_id,training_class, date_time, quota,cost))
       mydb.commit()
-      cursor.execute('SELECT * FROM training_list where training_class = %s',([training_class]))
+      cursor.execute('SELECT * FROM training_list where service_id = %s',([service_id]))
       new_service = cursor.fetchone()
       return jsonify(new_service)
   return jsonify({"msg":"salah method/gada form nama/email/pq"})
@@ -554,6 +581,24 @@ def edit_service(service_type, service_id):
       return jsonify(new_service)
   return jsonify({"msg":"salah method/gada form nama/email/pq"})
 
+@app.route('/del_service/<type>/<service_id>', methods=['POST'])
+def del_service(type, service_id):
+  if type == 'legal':
+    cursor.execute('DELETE FROM legal_list WHERE service_id = %s',([service_id]))
+    mydb.commit()
+    return jsonify({"msg":"service deleted"})
+  elif type == 'translate':
+    cursor.execute('DELETE FROM translate_list WHERE service_id = %s',([service_id]))
+    mydb.commit()
+    return jsonify({"msg":"service deleted"})
+  elif type == 'training':
+    cursor.execute('DELETE FROM training_list WHERE service_id = %s',([service_id]))
+    mydb.commit()
+    return jsonify({"msg":"service deleted"})
+  else :
+    return jsonify({"msg":"no service"})  
+  # return jsonify({"msg":"has not logged in"})
+
 @app.route('/legal_order', methods=['POST'])
 def legal_order():
   if 'role' in session:
@@ -564,12 +609,14 @@ def legal_order():
       user_id = session['user_id']
       voucher = request.json["voucher"]
         
-      cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "LE%" ORDER BY order_id DESC')
+      cursor.execute('SELECT MAX(CAST(SUBSTRING(order_id FROM 3) AS UNSIGNED)) AS "order_id" from ordered WHERE order_service_id LIKE "LE%";')
       order = cursor.fetchone()
       if order:
-        order_id = "LE0000"+str(int(order['order_id'][2:])+1)
+        order_num = str(order['order_id']+1)
+        order_num = ((4-len(order_num))*"0")+order_num
+        order_id = "TR"+order_num
       else:
-        order_id = "LE0000"+"1"
+        order_id = "LE000"+"1"
       
       cursor.execute('SELECT cost FROM legal_list WHERE service_id = %s',([legal_service_id]))
       cost = cursor.fetchone()
@@ -613,14 +660,15 @@ def translate_order():
         translate_service_id = cursor.fetchone() #dict
 
         # #menentukan order id
-        cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TR%" ORDER BY order_id DESC')
+        # cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TR%" ORDER BY order_id DESC')
+        cursor.execute('SELECT MAX(CAST(SUBSTRING(order_id FROM 3) AS UNSIGNED)) AS "order_id" from ordered WHERE order_service_id LIKE "TR%";')
         order = cursor.fetchone()
         if order:
           order_num = str(int(order['order_id'][2:])+1)
           order_num = ((4-len(order_num))*"0")+order_num
           order_id = "TR"+order_num
         else:
-          order_id = "TR0000"+"1"
+          order_id = "TR000"+"1"
 
         print(translate_service_id['service_id'])
 
@@ -664,7 +712,7 @@ def training_order():
           date = datetime.datetime.now().date()
           user_id = session['user_id']
           #menentukan order id
-          cursor.execute('SELECT order_id FROM ordered WHERE order_id LIKE "TN%" ORDER BY order_id DESC')
+          cursor.execute('SELECT MAX(CAST(SUBSTRING(order_id FROM 3) AS UNSIGNED)) AS "order_id" from ordered WHERE order_service_id LIKE "TN%";')
           order = cursor.fetchone()
           if order:
             order_num = str(int(order['order_id'][2:])+1)
