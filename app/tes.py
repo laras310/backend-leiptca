@@ -22,10 +22,13 @@ app.secret_key="abcd"
 def current_user():
     if 'name' in session:
       return jsonify({
-          "name":session['name'],
-          "role":session['role'],
-          "email":session['email'],
-          "user_id":session['user_id']
+          "status" : session['loggedin'],
+          "data":{
+            "name":session['name'],
+            "role":session['role'],
+            "email":session['email'],
+            "user_id":session['user_id']
+          }
         })
     else:
         return jsonify({'error': 'Not logged in'})
@@ -58,9 +61,9 @@ def login():
           session['user_id'] = user['user_id']
           session['role'] = user['role']
           session['email'] = user['email']
-          return ({'msg': 'login berhasil'})
+          session ['loggedin'] = True
 
-          # return redirect(url_for('current_user'))
+          return redirect(url_for('current_user'))
       
       # jika user tidak ditemukan
       return jsonify({'error': 'Invalid email or password'})
