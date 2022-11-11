@@ -58,8 +58,9 @@ def login():
           session['user_id'] = user['user_id']
           session['role'] = user['role']
           session['email'] = user['email']
+          return ({'msg': 'login berhasil'})
 
-          return redirect(url_for('current_user'))
+          # return redirect(url_for('current_user'))
       
       # jika user tidak ditemukan
       return jsonify({'error': 'Invalid email or password'})
@@ -621,32 +622,28 @@ def translate_order():
         print(translate_service_id['service_id'])
 
         # #ambil atribut cost
-        cursor.execute('SELECT regular_cost FROM translate_list WHERE service_id = %s',([translate_service_id['service_id']]))
+        cursor.execute('SELECT cost FROM translate_list WHERE service_id = %s',([translate_service_id['service_id']]))
         cost = cursor.fetchone()
+        total=cost["cost"]*int(num_of_pages)
 
+        if order_type == "express":
+          total = total*2
 
-        # cursor.execute('SELECT * FROM translate_list WHERE service_id = "%s"',(translate_service_id['service_id']))
-        # cost = cursor.fetchone()
-        # if order_type == "express":
-        #   cost = cost*2
-        
-        print(cost['regular_cost'])
+        #simpan ke tabel ordered
+        cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id['service_id'], user_id, date, total))
+        mydb.commit()
 
-        # #simpan ke tabel ordered
-        # cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "translate")', (order_id, translate_service_id, user_id, date, cost['cost']))
-        # mydb.commit()
+        #simpan delivery ke translate order
+        cursor.execute('INSERT INTO translate_order (order_id, delivery, num_of_pages) VALUES (%s,%s,%s)', (order_id,delivery,num_of_pages))
+        mydb.commit()
 
-        # #simpan delivery ke translate order
-        # cursor.execute('INSERT INTO translate_order (order_id, delivery, num_of_pages) VALUES (%s,%s,%s)', (order_id,delivery,num_of_pages))
-        # mydb.commit()
-
-        # return jsonify(order_id)
+        return jsonify(order_id)
       return jsonify({"msg":"salah method/gada form nama/email/pq"})
     return jsonify({"msg":"Has no access"})
   return jsonify({"msg":"not logged in"})
 
 @app.route('/training_order', methods=['POST'])
-def add_training_order():
+def training_order():
   if 'role' in session:
     if session['role'] == "client":
       if 'training_service_id' in request.json:
@@ -687,6 +684,41 @@ def add_training_order():
       return jsonify({"msg":"salah method/gada form nama/email/pq"})
     return jsonify({"msg":"Has no access"})
   return jsonify({"msg":"not logged in"})
+
+@app.route('/company_profile', methods=['GET','POST'])
+def company_profile():
+  if request.method =='GET':
+    cursor.execute('SELECT * FROM company_profile')
+    comp_profile=cursor.fetchall
+    return jsonify({
+      "description":comp_profile['description'],
+      "street":comp_profile['street'],
+      "province":comp_profile['province'],
+      "city":comp_profile['city'],
+      "link_1":comp_profile['link_1'],
+      "link_2":comp_profile['link_2'],
+      "link_3":comp_profile['link_3'],
+      "link_4":comp_profile['link_4']
+      }) 
+  #edit company profile
+  elif request.method =='POST':
+    if 'description' in request.json and 'street' in request.json and 'province' in request.json and 'city' in request.json:
+      description=request.json['description']
+      street =request.json['street']
+      province = request.json['province']
+      city = request.json['city']
+      link_1 = request.json['link_1']
+      link_2 = request.json['link_2']
+      link_3 = request.json['link_3']
+      link_4 = request.json['link_4']
+
+      cursor.execute('UPDATE company_profile description = %s, street= %s, city=%s, province=%s, link_1=%s, link_2=%s, link_3=%s,link_4=%s', (description,street, city, province, link_1, link_2, link_3, link_4))
+      mydb.commit()
+      return(province)
+
+@app.route('/edit_company_profile', methods=['POST'])
+def edit_company_profile():
+  return 204
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8080, debug=True)
