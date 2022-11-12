@@ -68,6 +68,9 @@ def login():
             redirect(url_for('current_user'))
           )
           response.headers["Content-Type"] = "application/json"
+          response.headers.add('Access-Control-Allow-Origin', '*')
+          response.headers.add('Access-Control-Allow-Headers', '*')
+          response.headers.add('Access-Control-Allow-Methods', '*')
           return response
       
       # jika user tidak ditemukan
