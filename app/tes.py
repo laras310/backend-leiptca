@@ -794,10 +794,10 @@ def notification():
     cursor.execute('SELECT * FROM notification')
     notification=cursor.fetchall()
     return jsonify({
-            "name":notification['name'],
-            "role":notification['role'],
-            "email":notification['email'],
-            "user_id":notification['user_id']
+            "type":notification['type'],
+            "title":notification['title'],
+            "description":notification['description'],
+            "status":notification['status']
         })
   return 204
 
