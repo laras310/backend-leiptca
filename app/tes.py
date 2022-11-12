@@ -793,12 +793,13 @@ def notification():
   if request.method == 'GET':
     cursor.execute('SELECT * FROM notification')
     notification=cursor.fetchall()
-    return jsonify({
-            "type":notification['type'],
-            "title":notification['title'],
-            "description":notification['description'],
-            "status":notification['status']
-        })
+    return jsonify(notification)
+    # return jsonify({
+    #         "type":notification['type'],
+    #         "title":notification['title'],
+    #         "description":notification['description'],
+    #         "status":notification['status']
+    #     })
   return 204
 
 @app.route('/update_notification/<notif_id>', methods=['POST'])
@@ -810,15 +811,15 @@ def update_notification(notif_id):
     cursor.execute('UPDATE notification SET status = %s WHERE notif_id = %s',(status,notif_id))
     mydb.commit()
 
-    cursor.execute('SELECT status FROM notification WHERE notif_id=%s',(notif_id))
-    notification=cursor.fetchall()
+    cursor.execute('SELECT status FROM notification WHERE notif_id=%s',([notif_id]))
+    notification=cursor.fetchone()
     return jsonify(notification)
   return 204
 
 @app.route('/del_notification/<notif_id>', methods=['POST'])
 def del_notification(notif_id):
   if request.method == 'POST':
-    cursor.execute('DELETE FROM notification WHERE notif_id = %s',(notif_id))
+    cursor.execute('DELETE FROM notification WHERE notif_id = %s',([notif_id]))
     mydb.commit()
     return jsonify({
             "msg":"notif deleted"
