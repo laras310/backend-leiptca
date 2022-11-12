@@ -638,7 +638,7 @@ def legal_order():
       mydb.commit()
 
       #input notif
-      cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Legal", %s, "Order masuk")', (order_id))
+      cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Legal", %s, "Order masuk")', ([order_id]))
       mydb.commit()
 
       #input voucher kalau ada
@@ -702,7 +702,7 @@ def translate_order():
         mydb.commit()
 
         #input notif
-        cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Translate", %s, "Order masuk")', (order_id))
+        cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Translate", %s, "Order masuk")', ([order_id]))
         mydb.commit()
 
         return jsonify(order_id)
@@ -747,7 +747,7 @@ def training_order():
           mydb.commit()
 
           #input notif
-          cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Training", %s, "Order masuk")', (order_id))
+          cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Training", %s, "Order masuk")', ([order_id]))
           mydb.commit()
 
           return jsonify(order_id)
