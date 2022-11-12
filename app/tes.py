@@ -2,6 +2,7 @@ from urllib import response
 import mysql.connector
 from flask import Flask, make_response, render_template, request, redirect, url_for, session, send_file, abort, jsonify
 # from flask_cors import CORS
+from flask_cors import CORS
 import datetime
 
 mydb = mysql.connector.connect(
@@ -13,7 +14,8 @@ mydb = mysql.connector.connect(
 
 # inisiasi variabel aplikasi
 app = Flask(__name__)
-# CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 cursor = mydb.cursor(dictionary=True,buffered=True)
 app.secret_key="abcd"
 
@@ -62,8 +64,11 @@ def login():
           session['role'] = user['role']
           session['email'] = user['email']
           session ['loggedin'] = True
-
-          return redirect(url_for('current_user'))
+          response=make_response(
+            redirect(url_for('current_user'))
+          )
+          response.headers["Content-Type"] = "application/json"
+          return response
       
       # jika user tidak ditemukan
       return jsonify({'error': 'Invalid email or password'})
