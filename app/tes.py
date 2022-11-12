@@ -677,7 +677,7 @@ def translate_order():
         cursor.execute('SELECT MAX(CAST(SUBSTRING(order_id FROM 3) AS UNSIGNED)) AS "order_id" from ordered WHERE order_service_id LIKE "TR%";')
         order = cursor.fetchone()
         if order:
-          order_num = str(int(order['order_id'][2:])+1)
+          order_num = str(order['order_id']+1)
           order_num = ((4-len(order_num))*"0")+order_num
           order_id = "TR"+order_num
         else:
@@ -732,7 +732,7 @@ def training_order():
           cursor.execute('SELECT MAX(CAST(SUBSTRING(order_id FROM 3) AS UNSIGNED)) AS "order_id" from ordered WHERE order_service_id LIKE "TN%";')
           order = cursor.fetchone()
           if order:
-            order_num = str(int(order['order_id'][2:])+1)
+            order_num = str(order['order_id']+1)
             order_num = ((4-len(order_num))*"0")+order_num
             order_id = "TN"+order_num
           else:
