@@ -635,6 +635,11 @@ def legal_order():
 
       #input delivery dan voucher type to legal_order
       cursor.execute('INSERT INTO legal_order (order_id, delivery, voucher) VALUES (%s,%s,%s)', (order_id,delivery,voucher))
+      mydb.commit()
+
+      #input notif
+      cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Legal", %s, "Order masuk")', (order_id))
+      mydb.commit()
 
       #input voucher kalau ada
       # if 'voucher' in request.json:
@@ -696,6 +701,10 @@ def translate_order():
         cursor.execute('INSERT INTO translate_order (order_id, delivery, num_of_pages) VALUES (%s,%s,%s)', (order_id,delivery,num_of_pages))
         mydb.commit()
 
+        #input notif
+        cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Translate", %s, "Order masuk")', (order_id))
+        mydb.commit()
+
         return jsonify(order_id)
       return jsonify({"msg":"salah method/gada form nama/email/pq"})
     return jsonify({"msg":"Has no access"})
@@ -737,6 +746,10 @@ def training_order():
           cursor.execute('INSERT INTO ordered (order_id, order_service_id, user_id, order_date, order_cost, order_desc) VALUES (%s,%s,%s,%s,%s, "training")', (order_id, training_service_id, user_id, date, cost['cost']))
           mydb.commit()
 
+          #input notif
+          cursor.execute('INSERT INTO notification (status, type, title, description) VALUES (1, "Training", %s, "Order masuk")', (order_id))
+          mydb.commit()
+
           return jsonify(order_id)
         else:
           return jsonify({"msg":"quota penuh"})
@@ -775,8 +788,41 @@ def company_profile():
       mydb.commit()
       return(province)
 
-@app.route('/edit_company_profile', methods=['POST'])
-def edit_company_profile():
+@app.route('/show_notification', methods=['GET'])
+def notification():
+  if request.method == 'GET':
+    cursor.execute('SELECT * FROM notification')
+    notification=cursor.fetchall()
+    return jsonify({
+            "name":notification['name'],
+            "role":notification['role'],
+            "email":notification['email'],
+            "user_id":notification['user_id']
+        })
+  return 204
+
+@app.route('/update_notification/<notif_id>', methods=['POST'])
+def update_notification(notif_id):
+  if request.method == 'POST':
+    #ubah status jadi 0 (sudah dibaca)
+    #1 (belum dibaca)
+    status = 0
+    cursor.execute('UPDATE notification SET status = %s WHERE notif_id = %s',(status,notif_id))
+    mydb.commit()
+
+    cursor.execute('SELECT status FROM notification WHERE notif_id=%s',(notif_id))
+    notification=cursor.fetchall()
+    return jsonify(notification)
+  return 204
+
+@app.route('/del_notification/<notif_id>', methods=['POST'])
+def del_notification(notif_id):
+  if request.method == 'POST':
+    cursor.execute('DELETE FROM notification WHERE notif_id = %s',(notif_id))
+    mydb.commit()
+    return jsonify({
+            "msg":"notif deleted"
+        })
   return 204
 
 if __name__ == '__main__':
