@@ -230,7 +230,7 @@ CREATE TABLE `legal_list` (
 
 LOCK TABLES `legal_list` WRITE;
 /*!40000 ALTER TABLE `legal_list` DISABLE KEYS */;
-INSERT INTO `legal_list` VALUES ('le1','Other Permit/Licensing','Bookkeeping in foreign language and foreign currency',4000000),('le10','Trademark','File Application',4000000),('le11','Trademark','File & Search',4300000),('le12','Trademark','Hearing Response',3000000),('le13','Trademark','Appeal',6000000),('le14','Trademark','Opposition/Rebuttal',3500000),('le15','Trademark','Cancellation Suit',65000000),('le16','Trademark','Trademark Search',500000),('le17','Trademark','Official Trademark Search (By Registry)',700000),('le18','Trademark','Letter to Other Party (Warning Letter/Demand \r\nLetter/Others)',10999999),('le19','Trademark','Response to Official Letter from Registry',0),('le2','Other Permit/Licensing','Food Production Certificate (SPP-IRT) ',9000000),('le20','Trademark','Trademark Renewal',3500000),('le21','Trademark','Trademark Renewal (After 6 months grace \r\nperiod)',4300000),('le22','Trademark','Certificate',0),('le23','Patent','File in Indonesia (NON PCT',45000000),('le24','Patent','Additional Claim',75000),('le25','Patent','Substantive',5000000),('le26','Patent','Patent Search',500000),('le27','Patent','Official Patent Search (By Registry)',700000),('le28','Patent','Publication',100000),('le29','Patent','F12',0),('le3','Other Permit/Licensing','Halal Permit',10999999),('le30','Patent','Grant Allowance Notification',2000000),('le31','Patent','Certificate (Report & Forward)',1500000),('le32','Industrial Design','Registration',4000000),('le33','Industrial Design','Search',500000),('le34','Industrial Design','Publication',500000),('le35','Industrial Design','Certificate (Report & Forward)',1000000),('le36','Copyright','Recordation',2300000),('le4','Other Permit/Licensing','Indonesian National Standard (SNI) Certificate',20000000),('le5','Other Permit/Licensing','International Standard Organization (ISO)',20000000),('le6','Other Permit/Licensing','Manual and guarantee registration',7500000),('le7','Other Permit/Licensing','Medical business license',10999999),('le8','Other Permit/Licensing','National Food and Drug Agency permit (BPOM)',9000000),('le9','Other Permit/Licensing','PKRT',10999999);
+INSERT INTO `legal_list` VALUES ('le1','Other Permit/Licensing','Bookkeeping in foreign language and foreign currency',4000000),('le10','Trademark','File Application',4000000),('le11','Trademark','File & Search',4300000),('le12','Trademark','Hearing Response',3000000),('le13','Trademark','Appeal',6000000),('le14','Trademark','Opposition/Rebuttal',3500000),('le15','Trademark','Cancellation Suit',65000000),('le16','Trademark','Trademark Search',500000),('le17','Trademark','Official Trademark Search (By Registry)',700000),('le18','Trademark','Letter to Other Party (Warning Letter/Demand \r\nLetter/Others)',10999999),('le19','Trademark','Response to Official Letter from Registry',0),('le2','Other Permit/Licensing','Food Production Certificate (SPP-IRT) ',9000000),('le20','Trademark','Trademark Renewal',3500000),('le21','Trademark','Trademark Renewal (After 6 months grace \r\nperiod)',4300000),('le22','Trademark','Certificate',0),('le23','Patent','File in Indonesia (NON PCT',45000000),('le24','Patent','Additional Claim',75000),('le25','Patent','Substantive',5000000),('le26','Patent','Patent Search',500000),('le27','Patent','Official Patent Search (By Registry)',700000),('le28','Patent','Publication',100000),('le29','Patent','F12',0),('le3','Other Permit/Licensing','Halal Permit',10999999),('le30','Patent','Grant Allowance Notification',2000000),('le31','Patent','Certificate (Report & Forward)',1500000),('le32','Industrial Design','Registration',4000000),('le33','Industrial Design','Search',500000),('le34','Industrial Design','Publication',500000),('le35','Industrial Design','Certificate (Report & Forward)',1000000),('le36','Copyright','Recordation',2300000),('le37','webinar','web',0),('le4','Other Permit/Licensing','Indonesian National Standard (SNI) Certificate',20000000),('le5','Other Permit/Licensing','International Standard Organization (ISO)',20000000),('le6','Other Permit/Licensing','Manual and guarantee registration',7500000),('le7','Other Permit/Licensing','Medical business license',10999999),('le8','Other Permit/Licensing','National Food and Drug Agency permit (BPOM)',9000000),('le9','Other Permit/Licensing','PKRT',10999999);
 /*!40000 ALTER TABLE `legal_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -262,6 +262,32 @@ INSERT INTO `legal_order` VALUES ('LE00001','','data.pdf','');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notification` (
+  `notif_id` varchar(7) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`notif_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notification`
+--
+
+LOCK TABLES `notification` WRITE;
+/*!40000 ALTER TABLE `notification` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ordered`
 --
 
@@ -287,7 +313,7 @@ CREATE TABLE `ordered` (
 
 LOCK TABLES `ordered` WRITE;
 /*!40000 ALTER TABLE `ordered` DISABLE KEYS */;
-INSERT INTO `ordered` VALUES ('TN0001','tn1',1,'2022-11-09',0,'training'),('TN0002','tn1',1,'2022-11-09',0,'training'),('TN0003','tn1',1,'2022-11-09',0,'training'),('TN0004','tn1',1,'2022-11-09',0,'training'),('TN0005','tn1',1,'2022-11-09',0,'training');
+INSERT INTO `ordered` VALUES ('TN0001','tn1',1,'2022-11-09',0,'training'),('TN0002','tn1',1,'2022-11-09',0,'training'),('TN0003','tn1',1,'2022-11-09',0,'training'),('TN0004','tn1',1,'2022-11-09',0,'training'),('TN0005','tn1',1,'2022-11-09',0,'training'),('TR0001','tr13',4,'2022-11-10',18000000,'translate');
 /*!40000 ALTER TABLE `ordered` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,16 +325,17 @@ DROP TABLE IF EXISTS `progress`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `progress` (
+  `progress_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` varchar(20) NOT NULL,
-  `progress_num` int(11) NOT NULL,
-  `progress_name` text NOT NULL,
+  `progress_title` text NOT NULL,
   `progress_doc` text NOT NULL,
   `state` tinyint(1) DEFAULT NULL,
   `progress_desc` text NOT NULL,
   `status` varchar(10) NOT NULL,
+  PRIMARY KEY (`progress_id`),
   KEY `order_id` (`order_id`),
   CONSTRAINT `progress_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `ordered` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +344,7 @@ CREATE TABLE `progress` (
 
 LOCK TABLES `progress` WRITE;
 /*!40000 ALTER TABLE `progress` DISABLE KEYS */;
-INSERT INTO `progress` VALUES ('LE00001',1,'','Dokumen.zip',1,'Mohon dicek dan ditandatangani untuk dokumen TMCFO dan PoA. Berkas dikirim melalui progress selanjutnya',''),('LE00001',2,'','',0,'Harap mengunggah dokumen yang telah ditandatangani pada progress ini','');
+INSERT INTO `progress` VALUES (1,'LE00001','payment','Dokumen.zip',1,'Mohon dicek dan ditandatangani untuk dokumen TMCFO dan PoA. Berkas dikirim melalui progress selanjutnya','');
 /*!40000 ALTER TABLE `progress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,7 +393,7 @@ CREATE TABLE `training_list` (
 
 LOCK TABLES `training_list` WRITE;
 /*!40000 ALTER TABLE `training_list` DISABLE KEYS */;
-INSERT INTO `training_list` VALUES ('tn1','IP Class','2022-10-20 08:00:00',5,0),('tn2','Webinar Pemilihan Badan Usaha dan Badan Hukum dalam Memulai Bisnis','2022-11-16 08:00:00',100,0);
+INSERT INTO `training_list` VALUES ('tn1','IP Class','2022-10-20 08:00:00',5,0),('tn2','Webinar Pemilihan Badan Usaha dan Badan Hukum dalam Memulai Bisnis','2022-11-16 08:00:00',100,0),('tn3','webinar','0000-00-00 00:00:00',10,0);
 /*!40000 ALTER TABLE `training_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,7 +408,7 @@ CREATE TABLE `translate_list` (
   `service_id` varchar(20) NOT NULL,
   `lang_from` varchar(20) NOT NULL,
   `lang_to` varchar(20) NOT NULL,
-  `regular_cost` int(100) NOT NULL,
+  `cost` int(100) NOT NULL,
   `trans_type` text NOT NULL,
   PRIMARY KEY (`service_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -393,7 +420,7 @@ CREATE TABLE `translate_list` (
 
 LOCK TABLES `translate_list` WRITE;
 /*!40000 ALTER TABLE `translate_list` DISABLE KEYS */;
-INSERT INTO `translate_list` VALUES ('tr1','English','Bahasa Indonesia',35000,'Translate Only'),('tr10','Dutch','Bahasa Indonesia',400000,'Translate + Sworn'),('tr11','Bahasa Indonesia','Dutch',400000,'Translate + Sworn'),('tr12','Dutch','English',450000,'Translate + Sworn'),('tr13','English','Dutch',450000,'Translate + Sworn'),('tr14','French','Bahasa Indonesia',385000,'Translate + Sworn'),('tr15','Bahasa Indonesia','French',385000,'Translate + Sworn'),('tr16','English','French',400000,'Translate + Sworn'),('tr17','French','English',400000,'Translate + Sworn'),('tr18','German','Bahasa Indonesia',385000,'Translate + Sworn'),('tr19','Bahasa Indonesia','German',385000,'Translate + Sworn'),('tr2','English','Indonesia',90000,'Translate + Sworn'),('tr20','German','English',395000,'Translate + Sworn'),('tr21','English','German',395000,'Translate + Sworn'),('tr22','Japanese','Bahasa Indonesia',375000,'Translate + Sworn'),('tr23','Bahasa Indonesia','Japanese',375000,'Translate + Sworn'),('tr24','Japanese','English',385000,'Translate + Sworn'),('tr25','English','Japanese',385000,'Translate + Sworn'),('tr3','Bahasa Indonesia','English',40000,'Translate Only'),('tr4','Chinese','English',365000,'Translate + Sworn'),('tr5','English','Chinese',365000,'Translate + Sworn'),('tr6','Chinese','Bahasa Indonesia',295000,'Translate + Sworn'),('tr7','Bahasa Indonesia','Chinese',295000,'Translate + Sworn'),('tr8','Arabic','Bahasa Indonesia',300000,'Translate + Sworn'),('tr9','Bahasa Indonesia','Arabic',300000,'Translate + Sworn');
+INSERT INTO `translate_list` VALUES ('tr1','English','Bahasa Indonesia',35000,'Translate Only'),('tr10','Dutch','Bahasa Indonesia',400000,'Translate + Sworn'),('tr11','Bahasa Indonesia','Dutch',400000,'Translate + Sworn'),('tr12','Dutch','English',450000,'Translate + Sworn'),('tr13','English','Dutch',450000,'Translate + Sworn'),('tr14','French','Bahasa Indonesia',385000,'Translate + Sworn'),('tr15','Bahasa Indonesia','French',385000,'Translate + Sworn'),('tr16','English','French',400000,'Translate + Sworn'),('tr17','French','English',400000,'Translate + Sworn'),('tr18','German','Bahasa Indonesia',385000,'Translate + Sworn'),('tr19','Bahasa Indonesia','German',385000,'Translate + Sworn'),('tr2','English','Indonesia',90000,'Translate + Sworn'),('tr20','German','English',395000,'Translate + Sworn'),('tr21','English','German',395000,'Translate + Sworn'),('tr22','Japanese','Bahasa Indonesia',375000,'Translate + Sworn'),('tr23','Bahasa Indonesia','Japanese',375000,'Translate + Sworn'),('tr24','Japanese','English',385000,'Translate + Sworn'),('tr25','English','Japanese',385000,'Translate + Sworn'),('tr26','web','web',0,'webinar'),('tr3','Bahasa Indonesia','English',40000,'Translate Only'),('tr4','Chinese','English',365000,'Translate + Sworn'),('tr5','English','Chinese',365000,'Translate + Sworn'),('tr6','Chinese','Bahasa Indonesia',295000,'Translate + Sworn'),('tr7','Bahasa Indonesia','Chinese',295000,'Translate + Sworn'),('tr8','Arabic','Bahasa Indonesia',300000,'Translate + Sworn'),('tr9','Bahasa Indonesia','Arabic',300000,'Translate + Sworn');
 /*!40000 ALTER TABLE `translate_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,7 +448,7 @@ CREATE TABLE `translate_order` (
 
 LOCK TABLES `translate_order` WRITE;
 /*!40000 ALTER TABLE `translate_order` DISABLE KEYS */;
-INSERT INTO `translate_order` VALUES ('TR00001','translate','JNE','data.pdf',0);
+INSERT INTO `translate_order` VALUES ('TR0001','translate','JNE','data.pdf',0),('TR0001','','grab','',20);
 /*!40000 ALTER TABLE `translate_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,6 +465,7 @@ CREATE TABLE `user` (
   `password` varchar(20) NOT NULL,
   `role` varchar(20) NOT NULL,
   `name` text NOT NULL,
+  `subscribe` tinyint(1) NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -448,7 +476,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin@gmail.com','admin','superadmin','administrator'),(2,'april@gmail.com','april','cpr','aprilia'),(3,'ocha@gmail.com','ocha','legal','edinia ocha'),(4,'mayang@gmail.com','mayang','client','mayang hermanda'),(5,'gunawan@gmail.com','gunawan','codev','gunawan suprapto'),(6,'aprian@gmail.com','aprian','client','Aprian Yusuf'),(7,'chantika@gmail.com','chika','client','Chantika Aurrelia'),(13,'laras@gmail.com','laras','client','nurul aulia larasati'),(14,'doni@gmail.com','doni','client','dino suprapto'),(19,'nadia@gmail.com','nadia','cpr','nadia setiadi');
+INSERT INTO `user` VALUES (1,'admin@gmail.com','admin','superadmin','administrator',0),(2,'april@gmail.com','april','cpr','aprilia',0),(3,'ocha@gmail.com','ocha','legal','edinia ocha',0),(4,'mayang@gmail.com','mayang','client','mayang hermanda',0),(5,'gunawan@gmail.com','gunawan','codev','gunawan suprapto',0),(6,'aprian@gmail.com','aprian','client','Aprian Yusuf',0),(7,'chantika@gmail.com','chika','client','Chantika Aurrelia',0),(13,'laras@gmail.com','laras','client','nurul aulia larasati',0),(14,'doni@gmail.com','doni','client','dino suprapto',0),(19,'nadia@gmail.com','nadia','cpr','nadia setiadi',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -461,4 +489,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-10 10:16:42
+-- Dump completed on 2022-11-12 20:44:50
