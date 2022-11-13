@@ -6,9 +6,9 @@ from flask_cors import CORS
 import datetime
 
 mydb = mysql.connector.connect(
-  host="127.0.0.1",
-  user="root",
-  password="",
+  host="34.128.121.192",
+  user="admin",
+  password="admin",
   database="leiptca_web"
 )
 
