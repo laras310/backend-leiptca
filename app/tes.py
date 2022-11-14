@@ -6,16 +6,17 @@ from flask_cors import CORS, cross_origin
 import datetime
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="",
+  host="34.128.121.192",
+  user="admin",
+  password="admin",
   database="leiptca_web"
 )
 
 # inisiasi variabel aplikasi
 app = Flask(__name__)
-app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
+# app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, support_credentials=True)
 cursor = mydb.cursor(dictionary=True,buffered=True)
 app.secret_key="abcd"
 
@@ -48,6 +49,7 @@ def admin_list():
 
 @app.route('/login', methods=['POST'])
 @app.route('/login/', methods=['POST'])
+@cross_origin()
 def login():
   if not 'loggedin' in session:
     if 'email' in request.json and 'password' in request.json:
@@ -65,12 +67,21 @@ def login():
           session['email'] = user['email']
           session ['loggedin'] = True
           response=make_response(
-            redirect(url_for('current_user'))
+            jsonify({
+          "status" : session['loggedin'],
+          "data":{
+            "name":session['name'],
+            "role":session['role'],
+            "email":session['email'],
+            "user_id":session['user_id']
+          }
+        })
           )
           response.headers["Content-Type"] = "application/json"
           response.headers.add('Access-Control-Allow-Origin', '*')
           response.headers.add('Access-Control-Allow-Headers', '*')
           response.headers.add('Access-Control-Allow-Methods', '*')
+          # response.headers['Host']=None
           return response
       
       # jika user tidak ditemukan
@@ -84,6 +95,7 @@ def login():
 
 @app.route('/signup', methods=['POST'])
 @app.route('/signup/', methods=['POST'])
+@cross_origin()
 def signup():
   if request.method == 'POST' and 'name' in request.json and 'email' in request.json and 'password' in request.json:
     name = request.json["name"]
@@ -106,6 +118,7 @@ def signup():
 
 @app.route('/logout', methods=['POST'])
 @app.route('/logout/', methods=['POST'])
+@cross_origin()
 def logout():
     # menghapus semua data session
   session.clear()
@@ -113,6 +126,7 @@ def logout():
   return jsonify({"msg":"dah logout"})
 
 @app.route('/article/<by>/<val>', methods=['GET'])
+@cross_origin()
 def article(by, val):
   if by == "id":
     cursor.execute('SELECT * FROM article where article_id = %s',([val]))
@@ -126,6 +140,7 @@ def article(by, val):
     return jsonify({"msg":"tidak cocok"})
 
 @app.route('/del_article/<id>', methods=['POST'])
+@cross_origin()
 def del_article(id):
   if 'name' in session:
     if session['role'] == "superadmin" or session['role'] == "codev":
@@ -234,7 +249,8 @@ def delete_comment(comment_id):
     return jsonify({"msg":"login first"})
 
 @app.route('/dictionary/<language>/<alphabet>', methods=['GET'])
-@cross_origin(headers=['Content-Type', 'Authorization'])
+# @cross_origin(headers=['Content-Type', 'Authorization'])
+@cross_origin()
 def dictionary(language, alphabet):
   if language == "english":
     cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%"'.format(alphabet))
