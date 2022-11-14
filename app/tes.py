@@ -452,7 +452,7 @@ def roles():
 
 @app.route('/orders/<id>', methods=['GET'])
 def orders(id):
-  if 'role' in session:
+  # if 'role' in session:
     if not id=="all":
       cursor.execute('SELECT * FROM ordered where order_id = %s',([id]))
       order = cursor.fetchone()
