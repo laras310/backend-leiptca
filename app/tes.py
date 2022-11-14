@@ -1,14 +1,14 @@
 from urllib import response
 import mysql.connector
 from flask import Flask, make_response, render_template, request, redirect, url_for, session, send_file, abort, jsonify
+from flask_cors import CORS, cross_origin
 # from flask_cors import CORS
-from flask_cors import CORS
 import datetime
 
 mydb = mysql.connector.connect(
-  host="34.128.121.192",
-  user="admin",
-  password="admin",
+  host="localhost",
+  user="root",
+  password="",
   database="leiptca_web"
 )
 
@@ -234,6 +234,7 @@ def delete_comment(comment_id):
     return jsonify({"msg":"login first"})
 
 @app.route('/dictionary/<language>/<alphabet>', methods=['GET'])
+@cross_origin(headers=['Content-Type', 'Authorization'])
 def dictionary(language, alphabet):
   if language == "english":
     cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%"'.format(alphabet))
