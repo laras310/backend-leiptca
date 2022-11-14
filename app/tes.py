@@ -248,15 +248,15 @@ def delete_comment(comment_id):
   else:
     return jsonify({"msg":"login first"})
 
-@app.route('/dictionary/<language>/<alphabet>', methods=['GET'])
+@app.route('/dictionary/<language>/<alphabet>/<id>', methods=['GET'])
 # @cross_origin(headers=['Content-Type', 'Authorization'])
 @cross_origin()
-def dictionary(language, alphabet):
+def dictionary(language, alphabet,id):
   if language == "english":
-    cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%"'.format(alphabet))
+    cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet, id))
   
   elif language == "indonesia":
-    cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%"'.format(alphabet))
+    cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet,id))
   
   else :
     return jsonify({"msg":"gada bahasanya"})
