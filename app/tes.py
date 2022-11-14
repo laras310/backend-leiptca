@@ -142,17 +142,17 @@ def article(by, val):
 @app.route('/del_article/<id>', methods=['POST'])
 @cross_origin()
 def del_article(id):
-  if 'name' in session:
-    if session['role'] == "superadmin" or session['role'] == "codev":
+  # if 'name' in session:
+    # if session['role'] == "superadmin" or session['role'] == "codev":
       cursor.execute('DELETE FROM comment WHERE article_id = %s',([id]))
       mydb.commit()
       cursor.execute('DELETE FROM article WHERE article_id = %s',([id]))
       mydb.commit()
       return jsonify({"msg":"article deleted"})
-    else:
-      return jsonify({"msg":"Has no access"})
-  else:
-    return jsonify({"msg":"Has not login"})
+    # else:
+      # return jsonify({"msg":"Has no access"})
+  # else:
+    # return jsonify({"msg":"Has not login"})
 
 @app.route('/add_article', methods=['POST'])
 def add_article():
@@ -339,8 +339,8 @@ def edit_dictionary(language, dict_id):
 
 @app.route('/user/<id>', methods=['GET'])
 def user(id):
-  if 'role' in session:
-    if session['role'] == "superadmin":
+  # if 'role' in session:
+    # if session['role'] == "superadmin":
       if not id=="all":
         cursor.execute('SELECT * FROM user where user_id = %s',([id]))
         user = cursor.fetchall()
@@ -349,8 +349,8 @@ def user(id):
         cursor.execute('SELECT * FROM user ORDER BY name ASC')
         users = cursor.fetchall()
         return jsonify(users)
-    return jsonify({"msg":"has no access"})
-  return jsonify({"msg":"has not logged in"})
+    # return jsonify({"msg":"has no access"})
+  # return jsonify({"msg":"has not logged in"})
 
 @app.route('/del_user/<id>', methods=['POST'])
 def del_user(id):
