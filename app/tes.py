@@ -254,11 +254,11 @@ def delete_comment(comment_id):
 def dictionary(language, alphabet):
   if language == "english":
     # cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet, id))
-    cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%"'.format(alphabet))
+    cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" LIMIT 10'.format(alphabet))
   
   elif language == "indonesia":
     # cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet,id))
-    cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%"'.format(alphabet))
+    cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" LIMIT 10'.format(alphabet))
   
   else :
     return jsonify({"msg":"gada bahasanya"})
