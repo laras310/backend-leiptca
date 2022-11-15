@@ -9,7 +9,7 @@ mydb = mysql.connector.connect(
   host="34.128.121.192",
   user="admin",
   password="admin",
-  database="leiptca"
+  database="leiptca_web"
 )
 
 # inisiasi variabel aplikasi
