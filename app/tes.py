@@ -128,12 +128,13 @@ def logout():
 @app.route('/article/<by>/<val>', methods=['GET'])
 @cross_origin()
 def article(by, val):
+  date= datetime.datetime.now().date()
   if by == "id":
-    cursor.execute('SELECT * FROM article where article_id = %s',([val]))
+    cursor.execute('SELECT * FROM article where article_id = %s LIMIT 10',([val]))
     article = cursor.fetchone()
     return jsonify(article)
   elif by == "all":
-    cursor.execute('SELECT * FROM article ORDER BY article_date DESC')
+    cursor.execute('SELECT * FROM article WHERE article_date<=%s ORDER BY article_date DESC  LIMIT 10',([date]))
     articles = cursor.fetchall()
     return jsonify(articles)
   else:
@@ -248,17 +249,17 @@ def delete_comment(comment_id):
   else:
     return jsonify({"msg":"login first"})
 
-@app.route('/dictionary/<language>/<alphabet>', methods=['GET'])
+@app.route('/dictionary/<language>/<alphabet>/<dict_id>', methods=['GET'])
 # @cross_origin(headers=['Content-Type', 'Authorization'])
 @cross_origin()
-def dictionary(language, alphabet):
+def dictionary(language, alphabet,dict_id):
   if language == "english":
-    # cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet, id))
-    cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" LIMIT 10'.format(alphabet))
+    cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet, dict_id))
+    # cursor.execute('SELECT * FROM dict_eng where word LIKE "{}%" LIMIT 10'.format(alphabet))
   
   elif language == "indonesia":
-    # cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet,id))
-    cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" LIMIT 10'.format(alphabet))
+    cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" AND dict_id>{} LIMIT 10'.format(alphabet,dict_id))
+    # cursor.execute('SELECT * FROM dict_ind where word LIKE "{}%" LIMIT 10'.format(alphabet))
   
   else :
     return jsonify({"msg":"gada bahasanya"})
