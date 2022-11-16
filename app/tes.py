@@ -77,7 +77,7 @@ def login():
           }
         })
           )
-          # response.headers["Content-Type"] = "application/json"
+          response.headers["Content-Type"] = "application/json"
           # response.headers.add('Access-Control-Allow-Origin', '*')
           # response.headers.add('Access-Control-Allow-Headers', '*')
           # response.headers.add('Access-Control-Allow-Methods', '*')
